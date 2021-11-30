@@ -20,6 +20,8 @@
 #include "mech-lib.h"
 #include "auton-sets.h"
 
+extern bool frontMogos;
+
 #define waitUntil(condition)                                                   \
   do {                                                                         \
     wait(5, msec);                                                             \

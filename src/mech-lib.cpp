@@ -1,11 +1,10 @@
 #include "vex.h"
 
 //values or thresholds
-int liftPos = 1, tarliftPos = 53;
-int liftPos1 = 92, liftPos2 = 76, liftPos3 = 53;
+int liftPos = 0, tarliftPos = 98;
 
 bool f = false, t = true;
-bool LMState = f, RMState = f, BMState = t, TBState = f;
+bool LMState = t, RMState = t, BMState = f, TBState = t, frontMogos = f;
 
 int op_threshold = 100;
 
@@ -24,17 +23,17 @@ void con(int c, double t) {
 int Lift() {
   while(t) {
     switch(liftPos) {
-      case 1: tarliftPos = 92; break;
-      case 2: tarliftPos = 76; break;
-      case 3: tarliftPos = 53; break;
+      case 0: tarliftPos = 98; break;
+      case 1: tarliftPos = 76; break;
+      case 2: tarliftPos = 53; break;
     }
-    if(pot_liftValue != tarliftPos) {
-      Controller1.rumble(".");
+    int diffliftPos = pot_liftValue - tarliftPos;
+    if(abs(diffliftPos) > 2) {
       if(pot_liftValue < tarliftPos) {
-        lift.spin(fwd, 80, pct);
+        lift.spin(fwd, 100, pct);
       }
       else if(pot_liftValue > tarliftPos) {
-        lift.spin(reverse, 80, pct);
+        lift.spin(reverse, 100, pct);
       }
       else {
         lift.stop(hold);
@@ -94,16 +93,18 @@ void piston(char p, bool s) {
   }
 }
 
-//close individual pistons
-void LMCPiston(void) {
-  piston(*"lm", true);
-}
-void RMCPiston(void) {
-  piston(*"rm", true);
-}
-
-//auto open/close mogo pistons
-void closeMogo() {
-  op_leftMogo.objectDetected(LMCPiston);
-  op_rightMogo.objectDetected(RMCPiston);
+//front mogo release
+int FrontMogos() {
+  //Controller1.Screen.setCursor(1,1);
+  //Controller1.Screen.print("frontmogos");
+  if(frontMogos) {
+    //Controller1.Screen.clearLine(1);
+    piston(*"lm", t);
+    piston(*"rm", t);
+    wait(800, msec);
+    piston(*"lm", f);
+    piston(*"rm", f);
+    frontMogos = f;
+  }
+  return(0);
 }

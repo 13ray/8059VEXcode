@@ -10,8 +10,8 @@ void con(int c, int t);
 void twoBar(bool s);
 void piston(char p);
 void piston(char p, bool s);
-void closeMogo();
 
 int Lift();
+int FrontMogos();
 
 #endif

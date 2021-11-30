@@ -69,32 +69,35 @@ void usercontrol(void) {
   int driveMode = 1;
   double slowSpeed = 0.5;
   bool slowBase = f;
+  std::string drivePrint = "", slowPrint = "";
+  int LBSpeed = 0, RBSpeed = 0;
 
-  int LBSpeed = 0;
-  int RBSpeed = 0;
-
+  int y = 0, u = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0;
   // User control code here, inside the loop
   while (t) {
     if(Controller1.ButtonY.pressing()) {
+      y += 1;
       driveMode += 1;
-      Controller1.Screen.setCursor(3, 1);
-      Controller1.Screen.print("Drive Mode = %d", driveMode);
     }
 
     if(driveMode%3 == 1) { //reverse arcade
       LBSpeed = Controller1.Axis2.position() + Controller1.Axis4.position();
       RBSpeed = Controller1.Axis2.position() - Controller1.Axis4.position();
+      drivePrint = "R Arcade";
     }
     else if(driveMode%3 == 2) { //normal arcade
       LBSpeed = Controller1.Axis3.position() + Controller1.Axis1.position();
       RBSpeed = Controller1.Axis3.position() - Controller1.Axis1.position(); 
+      drivePrint = "Arcade";
     }
     else {
       LBSpeed = Controller1.Axis3.position();
       RBSpeed = Controller1.Axis2.position();
+      drivePrint = "Tank";
     }
 
     if(Controller1.ButtonUp.pressing()) {
+      u += 1;
       slowBase = !slowBase;
     }
 
@@ -107,88 +110,82 @@ void usercontrol(void) {
         leftBase.spin(fwd, LBSpeed*slowSpeed, pct);
         rightBase.spin(fwd, RBSpeed*slowSpeed, pct);
       }
+      Controller1.rumble("-");
+      slowPrint = "Slow";
     }
     else {
       leftBase.spin(fwd, LBSpeed, pct);
       rightBase.spin(fwd, RBSpeed, pct);
+      slowPrint = "Normal";
     }
     
     //2 bar
     if(Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()) {
+      lr2 += 1;
       piston(*"tb");
     }
-
     //mogo intakes
-    if(Controller1.ButtonR2.pressing()) {
-      piston(*"lm", t);
-      piston(*"rm", t);
-    }
-    /* back mogo intake has piston
-    if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing() && Controller1.ButtonR1.pressing()) {
-      piston(*"tb");
-    }
-
-    //mogo intakes
-    if(Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()) {
-      if(TBState == t) {
-        piston(*"bm", f);
+    else if(Controller1.ButtonR2.pressing()) {
+      r2 += 1;
+      if(liftPos == 0) {
+        piston(*"lm");
+        piston(*"rm");
       }
       else {
-        Controller1.rumble("-");
+        piston(*"lm", t);
+        piston(*"rm", t);
       }
     }
-    else if(Controller1.ButtonR2.pressing()) {
-      piston(*"lm", t);
-      piston(*"rm", t);
-    }
-    */
-
     //lift
-    if(Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {
-      if(liftPos == 1) {
-        Controller1.rumble("-");
+    else if(Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {
+      lr1 += 1;
+      if(liftPos == 0) {
+        Controller1.rumble("-"); 
       }
       else {
         liftPos -= 1;
+        if(liftPos == 0) {
+          piston(*"lm", f);
+          piston(*"rm", f);
+        }
       }
     } 
     else if(Controller1.ButtonR1.pressing()) {
-      if(liftPos == 3) {
+      r1 += 1;
+      if(liftPos == 2) {
         Controller1.rumble("-");
       }
       else {
         liftPos += 1;
       }
     }
-
+    
     //conveyor
-    if(liftPos != 1) {
+    if(liftPos != 0) {
       if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {
-        con(100);
+        conveyor.spin(fwd, 100, pct);
       }
       else if(Controller1.ButtonL1.pressing()) {
-        con(-100);
+        conveyor.spin(reverse, 100, pct);
       }
       else {
         conveyor.stop();
       }
     }
 
-    if(imu.isCalibrating()) {
-      Controller1.Screen.setCursor(1,1);
-      Controller1.Screen.print("Calibrating IMU");
-    }
-    else {
-      Controller1.Screen.setCursor(1, 1);
-      Controller1.Screen.print("%.2f %.2f %.2f", X, Y, ang * toDeg);
+    //if(!imu.isCalibrating()) {
+      //Controller1.Screen.setCursor(1, 1);
+      //Controller1.Screen.print("%.2f %.2f %.2f", X, Y, ang * toDeg);
+      Controller1.Screen.clearScreen();
       Controller1.Screen.setCursor(2, 1);
-      Controller1.Screen.print("Lift Pos = %d, %d, %d", liftPos, pot_liftValue, tarliftPos);
+      Controller1.Screen.print("Lift Pos = %d, %d, %d", liftPos, pot_liftValue, frontMogos);
+      std::string printing = drivePrint + " " + slowPrint;
       Controller1.Screen.setCursor(3, 1);
-      Controller1.Screen.print("Drive Mode = %d", driveMode%3);
-    }
+      Controller1.Screen.print(printing.c_str());
+      printf("y: %d, u: %d, r1: %d, r2: %d, lr1: %d, lr2: %d\n", y, u, r1, r2, lr1, lr2);
+    //}
     
-    
-    wait(20, msec); // Sleep the task for a short amount of time to
+    wait(5, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
 }
@@ -197,11 +194,12 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-  task controlTask(Control);
+  //task controlTask(Control);
   task sensorTask(Sensors);
   task odomTask(Odometry);
-  task debugTask(Debug);
+  //task debugTask(Debug);
   task liftTask(Lift);
+  task MogosTask(FrontMogos);
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
@@ -212,6 +210,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(100, msec);
+    wait(50, msec);
   }
 }

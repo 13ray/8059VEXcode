@@ -26,11 +26,7 @@ extern pot pot_lift;
 extern optical op_leftMogo;
 extern optical op_rightMogo;
 extern optical op_backMogo;
-extern inertial imu;
-
-extern task STask;
-extern task PSTask;
-extern task POTask;
+//extern inertial imu;
 
 extern timer Timer;
 extern controller Controller1;

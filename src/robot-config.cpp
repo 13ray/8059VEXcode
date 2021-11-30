@@ -10,13 +10,13 @@ brain  Brain;
 // VEXcode device constructors
 motor leftFront = motor(PORT19, ratio18_1, f);
 motor leftMid = motor(PORT12, ratio18_1, f);
-motor leftBack = motor(PORT14, ratio18_1, t);
+motor leftBack = motor(PORT14, ratio18_1, f);
 motor rightFront = motor(PORT10, ratio18_1, t);
 motor rightMid = motor(PORT2, ratio18_1, t);
-motor rightBack = motor(PORT4, ratio18_1, f);
+motor rightBack = motor(PORT4, ratio18_1, t);
 motor_group leftBase = motor_group(leftFront, leftMid, leftBack);
 motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
-motor conveyor = motor(PORT11, ratio18_1, false);
+motor conveyor = motor(PORT11, ratio6_1, false);
 motor lift = motor(PORT9, ratio36_1, false);
 
 digital_out leftBar = digital_out(Brain.ThreeWirePort.H);
@@ -39,12 +39,14 @@ controller Controller1 = controller(primary);
 //initialise
 void vexcodeInit(){
   Controller1.Screen.clearScreen();
-  imu.calibrate();
+  /*imu.calibrate();
   while(imu.isCalibrating()) {
+    Controller1.Screen.setCursor(1,1);
+    Controller1.Screen.print("Calibrating IMU");
     wait(20, msec);
   }
+  Controller1.Screen.clearLine(1);*/
 
-  rot_lb.setReversed(true);
   rot_lb.resetPosition();
   rot_rb.resetPosition();
 
