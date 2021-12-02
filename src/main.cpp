@@ -67,12 +67,10 @@ void autonomous(void) {
 void usercontrol(void) {
 
   int driveMode = 1;
-  double slowSpeed = 0.5;
-  bool slowBase = f;
   std::string drivePrint = "", slowPrint = "";
   int LBSpeed = 0, RBSpeed = 0;
   int count = 0, pcount = 0;
-  int by = 0, bu = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0, pby = 0, pbu = 0, pr1 = 0, pr2 = 0, plr1 = 0, plr2 = 0, l1 = 0;
+  int by = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0, pby = 0, pr1 = 0, pr2 = 0, plr1 = 0, plr2 = 0, l1 = 0;
   // User control code here, inside the loop
   while (t) {
     count += 1;
@@ -95,26 +93,9 @@ void usercontrol(void) {
       drivePrint = "Tank \t\t\t";
     }
 
-    //slowbase
-    if(Controller1.ButtonUp.pressing()) bu += 1;
-    if(bu == pbu & bu != 0) slowBase = !slowBase, bu = 0;
-    if(slowBase) {
-      if(LBSpeed == 0 && RBSpeed == 0) {
-        leftBase.stop(hold);
-        rightBase.stop(hold);
-      }
-      else {
-        leftBase.spin(fwd, LBSpeed*slowSpeed, pct);
-        rightBase.spin(fwd, RBSpeed*slowSpeed, pct);
-      }
-      Controller1.rumble("-");
-      slowPrint = "Slow  ";
-    }
-    else {
-      leftBase.spin(fwd, LBSpeed, pct);
-      rightBase.spin(fwd, RBSpeed, pct);
-      slowPrint = "Normal";
-    }
+    leftBase.spin(fwd, LBSpeed, pct);
+    rightBase.spin(fwd, RBSpeed, pct);
+    slowPrint = "Normal";
     
     //button counts
     if(Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()){lr2 += 1;}
@@ -178,12 +159,10 @@ void usercontrol(void) {
     Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
-    Controller1.Screen.setCursor(3, 10);
-    Controller1.Screen.print(slowPrint.c_str());
     // printf("r1: %d,\tr2: %d,\tlr1: %d,\t\tlr2: %d, %d\n", r1, r2, lr1, lr2, l1);
     // printf("pr1: %d,\tpr2: %d,\tplr1: %d,\tplr2: %d\n", pr1, pr2, plr1, plr2);
-    //printf("by: %d, bu: %d\n", by, bu);
-    pr1 = r1, pr2 = r2, plr1 = lr1, plr2 = lr2, pby = by, pbu = bu;
+    //printf("by: %d\n", by);
+    pr1 = r1, pr2 = r2, plr1 = lr1, plr2 = lr2, pby = by;
   }
 }
 
