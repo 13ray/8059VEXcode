@@ -1,10 +1,10 @@
 #include "vex.h"
 
 //values or thresholds
-int liftPos = 0, tarliftPos = 98;
+int liftPos = 0, tarliftPos = 97;
 
 bool f = false, t = true;
-bool LMState = t, RMState = t, BMState = f, TBState = t, frontMogos = f;
+bool LMState = t, RMState = t, BMState = f, TBState = t;
 
 int op_threshold = 100;
 
@@ -23,12 +23,12 @@ void con(int c, double t) {
 int Lift() {
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos = 98; break;
-      case 1: tarliftPos = 76; break;
-      case 2: tarliftPos = 53; break;
+      case 0: tarliftPos = 97; break;
+      case 1: tarliftPos = 80; break;
+      case 2: tarliftPos = 54; break;
     }
     int diffliftPos = pot_liftValue - tarliftPos;
-    if(abs(diffliftPos) > 2) {
+    if(abs(diffliftPos) > 1) {
       if(pot_liftValue < tarliftPos) {
         lift.spin(fwd, 100, pct);
       }
@@ -51,6 +51,13 @@ void twoBar(bool s) {
   leftBar.set(s);
   rightBar.set(s);
   TBState = s;
+}
+//front mogo pistons
+void frontMogo(bool s) {
+  leftMogo.set(s);
+  rightMogo.set(s);
+  LMState = s;
+  RMState = s;
 }
 
 //all pistons - toggle
@@ -91,20 +98,4 @@ void piston(char p, bool s) {
     TBState = s;
     twoBar(TBState);
   }
-}
-
-//front mogo release
-int FrontMogos() {
-  //Controller1.Screen.setCursor(1,1);
-  //Controller1.Screen.print("frontmogos");
-  if(frontMogos) {
-    //Controller1.Screen.clearLine(1);
-    piston(*"lm", t);
-    piston(*"rm", t);
-    wait(800, msec);
-    piston(*"lm", f);
-    piston(*"rm", f);
-    frontMogos = f;
-  }
-  return(0);
 }

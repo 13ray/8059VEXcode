@@ -8,10 +8,10 @@ extern bool f, t;
 void con(int c);
 void con(int c, int t);
 void twoBar(bool s);
+void frontMogo(bool s);
 void piston(char p);
 void piston(char p, bool s);
 
 int Lift();
-int FrontMogos();
 
 #endif

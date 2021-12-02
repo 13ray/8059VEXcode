@@ -35,6 +35,7 @@ inertial imu = inertial(PORT8);
 
 timer Timer;
 controller Controller1 = controller(primary);
+int hi = 0;
 
 //initialise
 void vexcodeInit(){
@@ -46,7 +47,6 @@ void vexcodeInit(){
     wait(20, msec);
   }
   Controller1.Screen.clearLine(1);*/
-
   rot_lb.resetPosition();
   rot_rb.resetPosition();
 

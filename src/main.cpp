@@ -71,15 +71,14 @@ void usercontrol(void) {
   bool slowBase = f;
   std::string drivePrint = "", slowPrint = "";
   int LBSpeed = 0, RBSpeed = 0;
-
-  int y = 0, u = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0;
+  int count = 0, pcount = 0;
+  int by = 0, bu = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0, pby = 0, pbu = 0, pr1 = 0, pr2 = 0, plr1 = 0, plr2 = 0, l1 = 0;
   // User control code here, inside the loop
   while (t) {
-    if(Controller1.ButtonY.pressing()) {
-      y += 1;
-      driveMode += 1;
-    }
-
+    count += 1;
+    //drivemode
+    if(Controller1.ButtonY.pressing()) by += 1;
+    if(by == pby && by!= 0) driveMode += 1, by = 0;
     if(driveMode%3 == 1) { //reverse arcade
       LBSpeed = Controller1.Axis2.position() + Controller1.Axis4.position();
       RBSpeed = Controller1.Axis2.position() - Controller1.Axis4.position();
@@ -88,19 +87,17 @@ void usercontrol(void) {
     else if(driveMode%3 == 2) { //normal arcade
       LBSpeed = Controller1.Axis3.position() + Controller1.Axis1.position();
       RBSpeed = Controller1.Axis3.position() - Controller1.Axis1.position(); 
-      drivePrint = "Arcade";
+      drivePrint = "Arcade \t";
     }
     else {
       LBSpeed = Controller1.Axis3.position();
       RBSpeed = Controller1.Axis2.position();
-      drivePrint = "Tank";
+      drivePrint = "Tank \t\t\t";
     }
 
-    if(Controller1.ButtonUp.pressing()) {
-      u += 1;
-      slowBase = !slowBase;
-    }
-
+    //slowbase
+    if(Controller1.ButtonUp.pressing()) bu += 1;
+    if(bu == pbu & bu != 0) slowBase = !slowBase, bu = 0;
     if(slowBase) {
       if(LBSpeed == 0 && RBSpeed == 0) {
         leftBase.stop(hold);
@@ -111,7 +108,7 @@ void usercontrol(void) {
         rightBase.spin(fwd, RBSpeed*slowSpeed, pct);
       }
       Controller1.rumble("-");
-      slowPrint = "Slow";
+      slowPrint = "Slow  ";
     }
     else {
       leftBase.spin(fwd, LBSpeed, pct);
@@ -119,53 +116,57 @@ void usercontrol(void) {
       slowPrint = "Normal";
     }
     
+    //button counts
+    if(Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()){lr2 += 1;}
+    else if(Controller1.ButtonR2.pressing() && !Controller1.ButtonL2.pressing()) {r2 += 1;}
+    else if(Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {lr1 += 1;} 
+    else if(Controller1.ButtonR1.pressing() && !Controller1.ButtonL2.pressing()) {r1 += 1;}
+    
     //2 bar
-    if(Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()) {
-      lr2 += 1;
+    if(lr2 == plr2 && lr2 != 0) {
       piston(*"tb");
+      lr2 = 0;
     }
-    //mogo intakes
-    else if(Controller1.ButtonR2.pressing()) {
-      r2 += 1;
+    //front mogo intake
+    else if(r2 == pr2 && r2 != 0) {
+      frontMogo(t);
       if(liftPos == 0) {
-        piston(*"lm");
-        piston(*"rm");
+        pcount = count;
       }
-      else {
-        piston(*"lm", t);
-        piston(*"rm", t);
-      }
+      r2 = 0;
     }
     //lift
-    else if(Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {
-      lr1 += 1;
+    else if(lr1 == plr1 && lr1 != 0) {
       if(liftPos == 0) {
         Controller1.rumble("-"); 
       }
       else {
         liftPos -= 1;
         if(liftPos == 0) {
-          piston(*"lm", f);
-          piston(*"rm", f);
+          frontMogo(f);
         }
       }
-    } 
-    else if(Controller1.ButtonR1.pressing()) {
-      r1 += 1;
+      lr1 = 0;
+    }
+    else if(r1 == pr1 && r1 != 0) {
       if(liftPos == 2) {
         Controller1.rumble("-");
       }
       else {
         liftPos += 1;
       }
+      r1 = 0;
     }
-    
+    //front mogo
+    if((count-pcount) == 8 && pcount != 0) frontMogo(f);
+
     //conveyor
     if(liftPos != 0) {
       if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {
         conveyor.spin(fwd, 100, pct);
       }
       else if(Controller1.ButtonL1.pressing()) {
+        l1 += 1;
         conveyor.spin(reverse, 100, pct);
       }
       else {
@@ -173,20 +174,16 @@ void usercontrol(void) {
       }
     }
 
-    //if(!imu.isCalibrating()) {
-      //Controller1.Screen.setCursor(1, 1);
-      //Controller1.Screen.print("%.2f %.2f %.2f", X, Y, ang * toDeg);
-      Controller1.Screen.clearScreen();
-      Controller1.Screen.setCursor(2, 1);
-      Controller1.Screen.print("Lift Pos = %d, %d, %d", liftPos, pot_liftValue, frontMogos);
-      std::string printing = drivePrint + " " + slowPrint;
-      Controller1.Screen.setCursor(3, 1);
-      Controller1.Screen.print(printing.c_str());
-      printf("y: %d, u: %d, r1: %d, r2: %d, lr1: %d, lr2: %d\n", y, u, r1, r2, lr1, lr2);
-    //}
-    
-    wait(5, msec); // Sleep the task for a short amount of time to
-                    // prevent wasted resources.
+    Controller1.Screen.setCursor(2, 1);
+    Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
+    Controller1.Screen.setCursor(3, 1);
+    Controller1.Screen.print(drivePrint.c_str());
+    Controller1.Screen.setCursor(3, 10);
+    Controller1.Screen.print(slowPrint.c_str());
+    // printf("r1: %d,\tr2: %d,\tlr1: %d,\t\tlr2: %d, %d\n", r1, r2, lr1, lr2, l1);
+    // printf("pr1: %d,\tpr2: %d,\tplr1: %d,\tplr2: %d\n", pr1, pr2, plr1, plr2);
+    //printf("by: %d, bu: %d\n", by, bu);
+    pr1 = r1, pr2 = r2, plr1 = lr1, plr2 = lr2, pby = by, pbu = bu;
   }
 }
 
@@ -199,7 +196,6 @@ int main() {
   task odomTask(Odometry);
   //task debugTask(Debug);
   task liftTask(Lift);
-  task MogosTask(FrontMogos);
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
@@ -210,6 +206,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(50, msec);
+    wait(0.5, msec);
   }
 }
