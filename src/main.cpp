@@ -66,8 +66,8 @@ void autonomous(void) {
 
 void usercontrol(void) {
 
-  int driveMode = 1;
-  std::string drivePrint = "", slowPrint = "";
+  int driveMode = 1, tbMode = 1;
+  std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
   int count = 0, pcount = 0;
   int by = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0, pby = 0, pr1 = 0, pr2 = 0, plr1 = 0, plr2 = 0, l1 = 0;
@@ -85,17 +85,16 @@ void usercontrol(void) {
     else if(driveMode%3 == 2) { //normal arcade
       LBSpeed = Controller1.Axis3.position() + Controller1.Axis1.position();
       RBSpeed = Controller1.Axis3.position() - Controller1.Axis1.position(); 
-      drivePrint = "Arcade \t";
+      drivePrint = "Arcade";
     }
     else {
       LBSpeed = Controller1.Axis3.position();
       RBSpeed = Controller1.Axis2.position();
-      drivePrint = "Tank \t\t\t";
+      drivePrint = "Tank";
     }
 
     leftBase.spin(fwd, LBSpeed, pct);
     rightBase.spin(fwd, RBSpeed, pct);
-    slowPrint = "Normal";
     
     //button counts
     if(Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()){lr2 += 1;}
@@ -105,12 +104,23 @@ void usercontrol(void) {
     
     //2 bar
     if(lr2 == plr2 && lr2 != 0) {
-      piston(*"tb");
+      tbMode += 1;
+      if(tbMode%3 == 1) {
+        twoBar.set(f);
+        backMogo.set(t);
+      }
+      else if(tbMode%3 == 2) {
+        twoBar.set(t);
+        backMogo.set(t);
+      }
+      else {
+        backMogo.set(f);
+      }
       lr2 = 0;
     }
     //front mogo intake
     else if(r2 == pr2 && r2 != 0) {
-      frontMogo(t);
+      frontMogo.set(t);
       if(liftPos == 0) {
         pcount = count;
       }
@@ -124,7 +134,7 @@ void usercontrol(void) {
       else {
         liftPos -= 1;
         if(liftPos == 0) {
-          frontMogo(f);
+          frontMogo.set(f);
         }
       }
       lr1 = 0;
@@ -139,7 +149,7 @@ void usercontrol(void) {
       r1 = 0;
     }
     //front mogo
-    if((count-pcount) == 8 && pcount != 0) frontMogo(f);
+    if((count-pcount) == 8 && pcount != 0) frontMogo.set(f);
 
     //conveyor
     if(liftPos != 0) {

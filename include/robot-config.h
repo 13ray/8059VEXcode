@@ -14,18 +14,16 @@ extern motor_group rightBase;
 extern motor conveyor;
 extern motor lift;
 
-extern digital_out leftBar;
-extern digital_out rightBar;
-extern digital_out leftMogo;
-extern digital_out rightMogo;
+extern digital_out twoBar;
+extern digital_out frontMogo;
 extern digital_out backMogo;
+extern digital_out liftAssist;
+extern digital_out pressure;
+extern digital_out antiTip;
 
 extern rotation rot_lb;
 extern rotation rot_rb;
 extern pot pot_lift;
-extern optical op_leftMogo;
-extern optical op_rightMogo;
-extern optical op_backMogo;
 //extern inertial imu;
 
 extern timer Timer;

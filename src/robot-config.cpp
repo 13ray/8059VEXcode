@@ -9,28 +9,26 @@ brain  Brain;
 
 // VEXcode device constructors
 motor leftFront = motor(PORT19, ratio18_1, f);
-motor leftMid = motor(PORT12, ratio18_1, f);
+motor leftMid = motor(PORT12, ratio18_1, t);
 motor leftBack = motor(PORT14, ratio18_1, f);
 motor rightFront = motor(PORT10, ratio18_1, t);
-motor rightMid = motor(PORT2, ratio18_1, t);
+motor rightMid = motor(PORT2, ratio18_1, f);
 motor rightBack = motor(PORT4, ratio18_1, t);
 motor_group leftBase = motor_group(leftFront, leftMid, leftBack);
 motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
 motor conveyor = motor(PORT11, ratio6_1, false);
 motor lift = motor(PORT9, ratio36_1, false);
 
-digital_out leftBar = digital_out(Brain.ThreeWirePort.H);
-digital_out rightBar = digital_out(Brain.ThreeWirePort.A);
-digital_out leftMogo = digital_out(Brain.ThreeWirePort.G);
-digital_out rightMogo = digital_out(Brain.ThreeWirePort.B);
-digital_out backMogo = digital_out(Brain.ThreeWirePort.E);
+digital_out twoBar = digital_out(Brain.ThreeWirePort.A);
+digital_out frontMogo = digital_out(Brain.ThreeWirePort.B);
+digital_out backMogo = digital_out(Brain.ThreeWirePort.C);
+digital_out liftAssist = digital_out(Brain.ThreeWirePort.D);
+digital_out pressure = digital_out(Brain.ThreeWirePort.E);
+digital_out antiTip = digital_out(Brain.ThreeWirePort.F);
 
 rotation rot_lb = rotation(PORT13, false);
 rotation rot_rb = rotation(PORT3, true);
-pot pot_lift = pot(Brain.ThreeWirePort.C);
-optical op_leftMogo = optical(PORT5);
-optical op_rightMogo = optical(PORT6);
-optical op_backMogo = optical(PORT7);
+pot pot_lift = pot(Brain.ThreeWirePort.G);
 inertial imu = inertial(PORT8);
 
 timer Timer;
@@ -50,7 +48,4 @@ void vexcodeInit(){
   rot_lb.resetPosition();
   rot_rb.resetPosition();
 
-  op_leftMogo.objectDetectThreshold(op_threshold);
-  op_rightMogo.objectDetectThreshold(op_threshold);
-  op_backMogo.objectDetectThreshold(op_threshold);
 }
