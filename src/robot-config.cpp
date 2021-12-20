@@ -23,8 +23,6 @@ digital_out twoBar = digital_out(Brain.ThreeWirePort.A);
 digital_out frontMogo = digital_out(Brain.ThreeWirePort.B);
 digital_out backMogo = digital_out(Brain.ThreeWirePort.C);
 digital_out liftAssist = digital_out(Brain.ThreeWirePort.D);
-digital_out pressure = digital_out(Brain.ThreeWirePort.E);
-digital_out antiTip = digital_out(Brain.ThreeWirePort.F);
 
 rotation rot_lb = rotation(PORT20, false);
 rotation rot_rb = rotation(PORT10, true);

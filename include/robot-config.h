@@ -18,8 +18,6 @@ extern digital_out twoBar;
 extern digital_out frontMogo;
 extern digital_out backMogo;
 extern digital_out liftAssist;
-extern digital_out pressure;
-extern digital_out antiTip;
 
 extern rotation rot_lb;
 extern rotation rot_rb;
