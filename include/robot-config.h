@@ -14,10 +14,12 @@ extern motor_group rightBase;
 extern motor conveyor;
 extern motor lift;
 
-extern digital_out twoBar;
+extern digital_out twoBarL;
+extern digital_out twoBarR;
 extern digital_out frontMogo;
 extern digital_out backMogo;
-extern digital_out liftAssist;
+extern digital_out liftAssistL;
+extern digital_out liftAssistR;
 
 extern rotation rot_lb;
 extern rotation rot_rb;

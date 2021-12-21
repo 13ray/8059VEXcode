@@ -6,6 +6,8 @@ extern bool f, t;
 
 void con(int c);
 void con(int c, int t);
+void liftAssist(bool s);
+void twoBar(bool s);
 
 int Lift();
 

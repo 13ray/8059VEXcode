@@ -65,8 +65,42 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+  // while(t) {
+  //   if(Controller1.ButtonA.pressing()) {
+  //     frontMogo.set(t);
+  //     Controller1.Screen.print("port b and d true");
+  //   }
+  //   else if(Controller1.ButtonA.pressing() && Controller1.ButtonL1.pressing()) {
+  //     frontMogo.set(f);
+  //     Controller1.Screen.print("port b and d false");
+  //   }
+  //   else if(Controller1.ButtonX.pressing()) {
+  //     digital_out(Brain.ThreeWirePort.C).set(t);
+  //     Controller1.Screen.print("port c true");
+  //   }
+  //   else if(Controller1.ButtonX.pressing() && Controller1.ButtonA.pressing()) {
+  //     digital_out(Brain.ThreeWirePort.C).set(f);
+  //     Controller1.Screen.print("port c false");
+  //   }
+  //   else if(Controller1.ButtonY.pressing()) {
+  //     digital_out(Brain.ThreeWirePort.E).set(t);
+  //     Controller1.Screen.print("port e true");
+  //   }
+  //   else if(Controller1.ButtonY.pressing() && Controller1.ButtonL1.pressing()) {
+  //     digital_out(Brain.ThreeWirePort.E).set(f);
+  //     Controller1.Screen.print("port e false");
+  //   }
+  //   else if(Controller1.ButtonUp.pressing()) {
+  //     digital_out(Brain.ThreeWirePort.F).set(t);
+  //     Controller1.Screen.print("port f true");
+  //   }
+  //   else if(Controller1.ButtonUp.pressing() && Controller1.ButtonL1.pressing()) {
+  //     digital_out(Brain.ThreeWirePort.F).set(f);
+  //     Controller1.Screen.print("port f false");
+  //   }
+  //   Controller1.Screen.clearScreen();
 
-  int driveMode = 1, tbMode = 1;
+  int driveMode = 1, tbMode = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
   int count = 0, pcount = 0;
@@ -85,12 +119,12 @@ void usercontrol(void) {
     else if(driveMode%3 == 2) { //normal arcade
       LBSpeed = Controller1.Axis3.position() + Controller1.Axis1.position();
       RBSpeed = Controller1.Axis3.position() - Controller1.Axis1.position(); 
-      drivePrint = "Arcade";
+      drivePrint = "Arcade  ";
     }
     else {
       LBSpeed = Controller1.Axis3.position();
       RBSpeed = Controller1.Axis2.position();
-      drivePrint = "Tank";
+      drivePrint = "Tank    ";
     }
 
     leftBase.spin(fwd, LBSpeed, pct);
@@ -106,21 +140,21 @@ void usercontrol(void) {
     if(lr2 == plr2 && lr2 != 0) {
       tbMode += 1;
       if(tbMode%3 == 1) {
-        twoBar.set(f);
-        backMogo.set(t);
+        twoBar(f);
+        backMogo.set(f);
       }
       else if(tbMode%3 == 2) {
-        twoBar.set(t);
-        backMogo.set(t);
+        twoBar(t);
+        backMogo.set(f);
       }
       else {
-        backMogo.set(f);
+        backMogo.set(t);
       }
       lr2 = 0;
     }
     //front mogo intake
     else if(r2 == pr2 && r2 != 0) {
-      frontMogo.set(t);
+      frontMogo.set(f);
       if(liftPos == 0) {
         pcount = count;
       }
@@ -134,7 +168,7 @@ void usercontrol(void) {
       else {
         liftPos -= 1;
         if(liftPos == 0) {
-          frontMogo.set(f);
+          frontMogo.set(t);
         }
       }
       lr1 = 0;
@@ -149,8 +183,8 @@ void usercontrol(void) {
       r1 = 0;
     }
     //front mogo
-    if((count-pcount) == 8 && pcount != 0) frontMogo.set(f);
-
+    if((count-pcount) == 8 && pcount != 0) frontMogo.set(t);
+    
     //conveyor
     if(liftPos != 0) {
       if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {
@@ -164,7 +198,8 @@ void usercontrol(void) {
         conveyor.stop();
       }
     }
-
+    Controller1.Screen.setCursor(1,1);
+    Controller1.Screen.print(tbMode);
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
@@ -184,7 +219,7 @@ int main() {
   task sensorTask(Sensors);
   task odomTask(Odometry);
   //task debugTask(Debug);
-  task liftTask(Lift);
+  //task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
@@ -195,6 +230,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(0.5, msec);
+    wait(100, msec);
   }
 }

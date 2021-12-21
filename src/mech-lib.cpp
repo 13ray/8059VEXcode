@@ -16,20 +16,30 @@ void con(int c, double t) {
   conveyor.stop(hold);
 }
 
+void twoBar(bool s) {
+  twoBarL.set(s);
+  twoBarR.set(s);
+}
+
+void liftAssist(bool s) {
+  liftAssistL.set(s);
+  liftAssistR.set(s);
+}
+
 //move lift to specific positions
 int Lift() {
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos = 97, liftAssist.set(f); break;
-      case 1: tarliftPos = 80; liftAssist.set(t); break;
-      case 2: tarliftPos = 54; liftAssist.set(t); break;
+      case 0: tarliftPos = 81, liftAssist(f); break;
+      case 1: tarliftPos = 75; liftAssist(t); break;
+      case 2: tarliftPos = 50; liftAssist(t); break;
     }
     if(abs(pot_liftValue - tarliftPos) > 1) {
       if(pot_liftValue < tarliftPos) {
-        lift.spin(fwd, 100, pct);
+        lift.spin(reverse, 100, pct);
       }
       else if(pot_liftValue > tarliftPos) {
-        lift.spin(reverse, 100, pct);
+        lift.spin(fwd, 100, pct);
       }
       else {
         lift.stop(hold);
