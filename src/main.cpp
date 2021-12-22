@@ -138,17 +138,20 @@ void usercontrol(void) {
     
     //2 bar
     if(lr2 == plr2 && lr2 != 0) {
-      tbMode += 1;
-      if(tbMode%3 == 1) {
-        twoBar(f);
+      if(tbMode == 3) {tbMode = 0;}
+      else {tbMode += 1;}
+      
+      if(tbMode%4 == 1) { //up close
+        twoBar(f); 
         backMogo.set(f);
       }
-      else if(tbMode%3 == 2) {
+      else if(tbMode%4 == 3) { //down open 
+        twoBar(t);
+        backMogo.set(t);;
+      } 
+      else {
         twoBar(t);
         backMogo.set(f);
-      }
-      else {
-        backMogo.set(t);
       }
       lr2 = 0;
     }
@@ -162,6 +165,7 @@ void usercontrol(void) {
     }
     //lift
     else if(lr1 == plr1 && lr1 != 0) {
+      // liftAssist(t);
       if(liftPos == 0) {
         Controller1.rumble("-"); 
       }
@@ -174,6 +178,7 @@ void usercontrol(void) {
       lr1 = 0;
     }
     else if(r1 == pr1 && r1 != 0) {
+      // liftAssist(f);
       if(liftPos == 2) {
         Controller1.rumble("-");
       }
@@ -184,7 +189,7 @@ void usercontrol(void) {
     }
     //front mogo
     if((count-pcount) == 8 && pcount != 0) frontMogo.set(t);
-    
+
     //conveyor
     if(liftPos != 0) {
       if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {
@@ -199,11 +204,12 @@ void usercontrol(void) {
       }
     }
     Controller1.Screen.setCursor(1,1);
-    Controller1.Screen.print(tbMode);
+    Controller1.Screen.print("Two Bar = %d", tbMode);
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
+
     // printf("r1: %d,\tr2: %d,\tlr1: %d,\t\tlr2: %d, %d\n", r1, r2, lr1, lr2, l1);
     // printf("pr1: %d,\tpr2: %d,\tplr1: %d,\tplr2: %d\n", pr1, pr2, plr1, plr2);
     //printf("by: %d\n", by);
@@ -219,7 +225,7 @@ int main() {
   task sensorTask(Sensors);
   task odomTask(Odometry);
   //task debugTask(Debug);
-  //task liftTask(Lift);
+  // task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
@@ -230,6 +236,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(100, msec);
+    wait(1, msec);
   }
 }

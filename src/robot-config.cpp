@@ -17,7 +17,7 @@ motor rightBack = motor(PORT9, ratio18_1, t);
 motor_group leftBase = motor_group(leftFront, leftMid, leftBack);
 motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
 motor conveyor = motor(PORT6, ratio6_1, t);
-motor lift = motor(PORT5, ratio36_1, t);
+motor lift = motor(PORT5, ratio36_1, f);
 
 digital_out twoBarL = digital_out(Brain.ThreeWirePort.B);
 digital_out twoBarR = digital_out(Brain.ThreeWirePort.D);
