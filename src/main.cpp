@@ -188,7 +188,7 @@ void usercontrol(void) {
       r1 = 0;
     }
     //front mogo
-    if((count-pcount) == 8 && pcount != 0) frontMogo.set(t);
+    if((count-pcount) == 10 && pcount != 0) frontMogo.set(t);
 
     //conveyor
     if(liftPos != 0) {
@@ -205,8 +205,9 @@ void usercontrol(void) {
     }
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", tbMode);
+    // printf("%.4f\n", lift.torque());
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
+    Controller1.Screen.print("Lift Pos = %d, %.1f", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
 
@@ -225,7 +226,7 @@ int main() {
   task sensorTask(Sensors);
   task odomTask(Odometry);
   //task debugTask(Debug);
-  // task liftTask(Lift);
+  task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);

@@ -10,7 +10,7 @@ int Sensors() {
       rot_rbValue = rot_rb.position(deg);
       bearing = imu.angle();
     }*/
-    pot_liftValue = pot_lift.value(pct);
+    pot_liftValue = pot_lift.value(deg);
     wait(5,msec);
   }
   return(0);

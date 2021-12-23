@@ -47,6 +47,7 @@ void vexcodeInit(){
   Controller1.Screen.clearLine(1);*/
   frontMogo.set(t);
   twoBar(t);
+  liftAssist(t);
   rot_lb.resetPosition();
   rot_rb.resetPosition();
 

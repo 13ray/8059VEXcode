@@ -1,7 +1,7 @@
 #include "vex.h"
 
 //values or thresholds
-int liftPos = 0, tarliftPos = 80, prevliftPos = 0;
+int liftPos = 0, tarliftPos = 80, prevliftPos = 0, potRange = 10;
 
 bool f = false, t = true;
 
@@ -32,11 +32,15 @@ void liftAssist(bool s) {
 int Lift() {
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos = 80; break;
-      case 1: tarliftPos = 75; break;
-      case 2: tarliftPos = 52; break;
+      case 0: tarliftPos = 202; break; //80
+      case 1: tarliftPos = 180; break; //75
+      case 2: tarliftPos = 128; break; //52
     }
-    if(abs(pot_liftValue - tarliftPos) > 1) {
+    if(liftPos == 1) {potRange = 10;}
+    else {potRange = 4;}
+
+    int potDiff = pot_liftValue - tarliftPos;
+    if(potDiff > potRange || potDiff < -potRange) {
       if(pot_liftValue < tarliftPos) { //going down
         lift.spin(reverse, 100, pct);
       }
@@ -47,8 +51,8 @@ int Lift() {
     else {
       lift.stop(hold);
     }
-    if(lift.voltage() > 2) {liftAssist(f);}
-    else {liftAssist(t);}
+    // if(lift.voltage() > 2) {liftAssist(f);}
+    // else {liftAssist(t);}
   }
   return(0);
 }
