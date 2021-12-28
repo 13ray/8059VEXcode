@@ -12,7 +12,8 @@ extern motor rightBack;
 extern motor_group leftBase;
 extern motor_group rightBase;
 extern motor conveyor;
-extern motor lift;
+extern motor leftLift;
+extern motor rightLift;
 
 extern digital_out twoBarL;
 extern digital_out twoBarR;

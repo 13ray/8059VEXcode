@@ -16,8 +16,8 @@ motor rightMid = motor(PORT10, ratio18_1, f);
 motor rightBack = motor(PORT9, ratio18_1, t);
 motor_group leftBase = motor_group(leftFront, leftMid, leftBack);
 motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
-motor conveyor = motor(PORT6, ratio6_1, t);
-motor lift = motor(PORT5, ratio36_1, f);
+motor leftLift = motor(PORT5, ratio36_1, f);
+motor rightLift = motor(PORT6,ratio36_1, t);
 
 digital_out twoBarL = digital_out(Brain.ThreeWirePort.B);
 digital_out twoBarR = digital_out(Brain.ThreeWirePort.D);
@@ -47,7 +47,6 @@ void vexcodeInit(){
   Controller1.Screen.clearLine(1);*/
   frontMogo.set(t);
   twoBar(t);
-  liftAssist(t);
   rot_lb.resetPosition();
   rot_rb.resetPosition();
 

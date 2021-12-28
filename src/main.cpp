@@ -65,46 +65,13 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  // while(t) {
-  //   if(Controller1.ButtonA.pressing()) {
-  //     frontMogo.set(t);
-  //     Controller1.Screen.print("port b and d true");
-  //   }
-  //   else if(Controller1.ButtonA.pressing() && Controller1.ButtonL1.pressing()) {
-  //     frontMogo.set(f);
-  //     Controller1.Screen.print("port b and d false");
-  //   }
-  //   else if(Controller1.ButtonX.pressing()) {
-  //     digital_out(Brain.ThreeWirePort.C).set(t);
-  //     Controller1.Screen.print("port c true");
-  //   }
-  //   else if(Controller1.ButtonX.pressing() && Controller1.ButtonA.pressing()) {
-  //     digital_out(Brain.ThreeWirePort.C).set(f);
-  //     Controller1.Screen.print("port c false");
-  //   }
-  //   else if(Controller1.ButtonY.pressing()) {
-  //     digital_out(Brain.ThreeWirePort.E).set(t);
-  //     Controller1.Screen.print("port e true");
-  //   }
-  //   else if(Controller1.ButtonY.pressing() && Controller1.ButtonL1.pressing()) {
-  //     digital_out(Brain.ThreeWirePort.E).set(f);
-  //     Controller1.Screen.print("port e false");
-  //   }
-  //   else if(Controller1.ButtonUp.pressing()) {
-  //     digital_out(Brain.ThreeWirePort.F).set(t);
-  //     Controller1.Screen.print("port f true");
-  //   }
-  //   else if(Controller1.ButtonUp.pressing() && Controller1.ButtonL1.pressing()) {
-  //     digital_out(Brain.ThreeWirePort.F).set(f);
-  //     Controller1.Screen.print("port f false");
-  //   }
-  //   Controller1.Screen.clearScreen();
 
   int driveMode = 1, tbMode = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
-  int count = 0, pcount = 0;
-  int by = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0, pby = 0, pr1 = 0, pr2 = 0, plr1 = 0, plr2 = 0, l1 = 0;
+  int count = 0, pcount = 0, pcount2 = 0;
+  int by = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0, l1 = 0, ll2 = 0, pby = 0, pr1 = 0, pr2 = 0, plr1 = 0, plr2 = 0, pl1 = 0, pll2 = 0;
+  
   // User control code here, inside the loop
   while (t) {
     count += 1;
@@ -135,25 +102,27 @@ void usercontrol(void) {
     else if(Controller1.ButtonR2.pressing() && !Controller1.ButtonL2.pressing()) {r2 += 1;}
     else if(Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {lr1 += 1;} 
     else if(Controller1.ButtonR1.pressing() && !Controller1.ButtonL2.pressing()) {r1 += 1;}
+    else if(Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing()) {l1 += 1;}
+    else if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {ll2 += 1;}
     
     //2 bar
-    if(lr2 == plr2 && lr2 != 0) {
-      if(tbMode == 3) {tbMode = 0;}
+    if(l1 == pl1 && l1!= 0) {
+      if(tbMode == 1) {tbMode -= 1;}
       else {tbMode += 1;}
-      
-      if(tbMode%4 == 1) { //up close
-        twoBar(f); 
-        backMogo.set(f);
+
+      if(tbMode%2 == 0){
+        twoBar(t); //toggle open
       }
-      else if(tbMode%4 == 3) { //down open 
-        twoBar(t);
-        backMogo.set(t);;
-      } 
-      else {
-        twoBar(t);
-        backMogo.set(f);
+      else{
+        twoBar(f); //toggle close
       }
-      lr2 = 0;
+      l1 = 0;
+    }
+    //back mogo intake
+    else if(ll2 == pll2 && ll2!= 0) {
+      backMogo.set(f);
+      pcount2 = count;
+      ll2 = 0;
     }
     //front mogo intake
     else if(r2 == pr2 && r2 != 0) {
@@ -165,21 +134,19 @@ void usercontrol(void) {
     }
     //lift
     else if(lr1 == plr1 && lr1 != 0) {
-      // liftAssist(t);
-      if(liftPos == 0) {
+      if(liftPos == 0) { //limit
         Controller1.rumble("-"); 
       }
       else {
         liftPos -= 1;
         if(liftPos == 0) {
-          frontMogo.set(t);
+          frontMogo.set(t); //intake open
         }
       }
       lr1 = 0;
     }
     else if(r1 == pr1 && r1 != 0) {
-      // liftAssist(f);
-      if(liftPos == 2) {
+      if(liftPos == 2) { //limit
         Controller1.rumble("-");
       }
       else {
@@ -188,24 +155,14 @@ void usercontrol(void) {
       r1 = 0;
     }
     //front mogo
-    if((count-pcount) == 10 && pcount != 0) frontMogo.set(t);
+    if((count-pcount) == 10 && pcount != 0) frontMogo.set(t); //close
 
-    //conveyor
-    if(liftPos != 0) {
-      if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {
-        conveyor.spin(fwd, 100, pct);
-      }
-      else if(Controller1.ButtonL1.pressing()) {
-        l1 += 1;
-        conveyor.spin(reverse, 100, pct);
-      }
-      else {
-        conveyor.stop();
-      }
-    }
+    //back mogo
+    if((count-pcount2) == 10 && pcount2 != 0) backMogo.set(t); //close
+
+    
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", tbMode);
-    // printf("%.4f\n", lift.torque());
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("Lift Pos = %d, %.1f", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
@@ -214,7 +171,7 @@ void usercontrol(void) {
     // printf("r1: %d,\tr2: %d,\tlr1: %d,\t\tlr2: %d, %d\n", r1, r2, lr1, lr2, l1);
     // printf("pr1: %d,\tpr2: %d,\tplr1: %d,\tplr2: %d\n", pr1, pr2, plr1, plr2);
     //printf("by: %d\n", by);
-    pr1 = r1, pr2 = r2, plr1 = lr1, plr2 = lr2, pby = by;
+    pr1 = r1, pr2 = r2, plr1 = lr1, plr2 = lr2, pl1 = l1, pll2 = ll2, pby = by;
   }
 }
 

@@ -5,27 +5,23 @@ int liftPos = 0, tarliftPos = 80, prevliftPos = 0, potRange = 10;
 
 bool f = false, t = true;
 
-//ring intake
-void con(int c) {
-  conveyor.spin(fwd, c, pct);
+//lift
+void lift(int s) {
+  leftLift.spin(fwd, s, pct);
+  rightLift.spin(fwd, s, pct);
 }
 
-void con(int c, double t) {
-  con(c);
+void lift(int s, int t) {
+  lift(s);
   wait(t, msec);
-  conveyor.stop(hold);
+  leftLift.stop(hold);
+  rightLift.stop(hold);
 }
 
 //two bar pistons
 void twoBar(bool s) {
   twoBarL.set(s);
   twoBarR.set(s);
-}
-
-//liftassist pistons
-void liftAssist(bool s) {
-  liftAssistL.set(s);
-  liftAssistR.set(s);
 }
 
 //move lift to specific positions
@@ -42,17 +38,16 @@ int Lift() {
     int potDiff = pot_liftValue - tarliftPos;
     if(potDiff > potRange || potDiff < -potRange) {
       if(pot_liftValue < tarliftPos) { //going down
-        lift.spin(reverse, 100, pct);
+        lift(-100);
       }
       else if(pot_liftValue > tarliftPos) { //going up
-        lift.spin(fwd, 100, pct);
+        lift(100);
       }
     }
     else {
-      lift.stop(hold);
+      leftLift.stop(hold);
+      rightLift.stop(hold);
     }
-    // if(lift.voltage() > 2) {liftAssist(f);}
-    // else {liftAssist(t);}
   }
   return(0);
 }

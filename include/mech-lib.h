@@ -4,9 +4,8 @@
 extern int liftPos, tarliftPos;
 extern bool f, t;
 
-void con(int c);
-void con(int c, int t);
-void liftAssist(bool s);
+void lift(int s);
+void lift(int s, int t);
 void twoBar(bool s);
 
 int Lift();
