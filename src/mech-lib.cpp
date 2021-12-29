@@ -1,7 +1,7 @@
 #include "vex.h"
 
 //values or thresholds
-int liftPos = 0, tarliftPos = 80, prevliftPos = 0, potRange = 10;
+int liftPos = 0, tarliftPos = 202, prevliftPos = 0, potRange = 3;
 
 bool f = false, t = true;
 
@@ -30,10 +30,8 @@ int Lift() {
     switch(liftPos) {
       case 0: tarliftPos = 202; break; //80
       case 1: tarliftPos = 180; break; //75
-      case 2: tarliftPos = 128; break; //52
+      case 2: tarliftPos = 125; break; //52
     }
-    if(liftPos == 1) {potRange = 10;}
-    else {potRange = 4;}
 
     int potDiff = pot_liftValue - tarliftPos;
     if(potDiff > potRange || potDiff < -potRange) {

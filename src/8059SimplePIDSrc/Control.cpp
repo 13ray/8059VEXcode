@@ -1,150 +1,126 @@
 #include "vex.h"
 
-#define DEFAULT_KP 0.17
-#define DEFAULT_KI 0
-#define DEFAULT_KD 5
-#define DEFAULT_TURN_KP 0.29
-#define DEFAULT_TURN_KI 0
-#define DEFAULT_TURN_KD 10
-#define KI_LIMIT 0
-#define RAMPING_POW 1
+#define DEFAULT_KP 0.27
+#define DEFAULT_KD 0.2
+#define DEFAULT_TURN_KP 1.2 // 20 degrees = 2.5, 180 degrees = 1
+#define DEFAULT_TURN_KD 0.6
+#define RAMPING_POW 1.2
 #define DISTANCE_LEEWAY 15
+#define BEARING_LEEWAY 1.5
 #define MAX_POW 100
 
-double targEncdL = 0, targEncdR = 0;
-double errorEncdL = 0, errorEncdR = 0;
+double targEncdL = 0, targEncdR = 0, targBearing = 0;
+double errorEncdL = 0, errorEncdR = 0, errorBearing = 0;
 double powerL = 0, powerR = 0;
 double targPowerL = 0, targPowerR = 0;
-double kP = DEFAULT_KP, kD = DEFAULT_KD, kI = DEFAULT_KI;
+double kP = DEFAULT_KP, kD = DEFAULT_KD;
 
-bool turnMode = f;
+bool turnMode = false, pauseBase = false, auton = f;
 
-void baseMove(double dis, double kp, double ki, double kd){
-  targEncdL = rot_lbValue;
-  targEncdR = rot_rbValue;
-
+void baseMove(double dis, double kp, double kd){
+  turnMode = false;
   targEncdL += dis/inPerDeg;
   targEncdR += dis/inPerDeg;
 
   kP = kp;
-  kI = ki;
   kD = kd;
 }
 void baseMove(double dis){
-  baseMove(dis, DEFAULT_KP, DEFAULT_KI, DEFAULT_KD);
+  baseMove(dis, DEFAULT_KP, DEFAULT_KD);
 }
 
-void baseMove(double x, double y, double p, double i, double d){
-	double errY = y-Y;
-	double errX = x-X;
-	double dis = sqrt(errY*errY + errX*errX);
-	double targAngle = atan2(errX,errY);
-
-	int negator = 1;
-  if(fabs(targAngle-ang) >= PI/2) negator = -1;
-
-  targEncdL += dis/inPerDeg*negator;
-  targEncdR += dis/inPerDeg*negator;
-
-  kP = p;
-  kI = i;
-  kD = d;
-}
-
-void baseMove(double x, double y){
-  baseMove(x, y, DEFAULT_KP, DEFAULT_KI, DEFAULT_KD);
-}
-
-void baseTurn(double a, double kp, double ki, double kd){
-  double error = a*toRad - ang;
-  double diff = error*baseWidth/inPerDeg/2;
-
-  targEncdL += diff;
-  targEncdR += -diff;
+void baseTurn(double p_bearing, double kp, double kd){
+  turnMode = true;
+  targBearing = p_bearing;
 	kP = kp;
-  kI = ki;
 	kD = kd;
 }
-
-void baseTurn(double a){
-  baseTurn(a, DEFAULT_TURN_KP, DEFAULT_TURN_KI, DEFAULT_TURN_KD);
+void baseTurn(double bearing){
+  baseTurn(bearing, DEFAULT_TURN_KP, DEFAULT_TURN_KD);
 }
 
 void powerBase(double l, double r) {
+  pauseBase = true;
   powerL = l;
   powerR = r;
 }
 
 void timerBase(double l, double r, double t) {
+  pauseBase = true;
   powerL = l;
   powerR = r;
   wait(t, msec);
   powerL = 0;
   powerR = 0;
+  pauseBase = false;
+  resetCoords(X, Y, bearing);
+}
+
+void unPauseBase() {
+  powerL = 0;
+  powerR = 0;
+  pauseBase = false;
+  resetCoords(X, Y, bearing);
 }
 
 void waitBase(double cutoff){
 	double start = Timer.time();
-  while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
-  printf("Time taken %.2f\n", (Timer.time() - start));
-  wait(200, msec);
-  // targEncdL = encdL;
-  // targEncdR = encdR;
-  resetPrevEncd();
-}
+  if(turnMode) {
+    while(fabs(targBearing - bearing) > BEARING_LEEWAY && (Timer.time()-start) < cutoff) wait(20, msec);
+  }else{
+    while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
+  }
 
-void waitBaseNoD(double cutoff){
-	double start = Timer.time();
-  while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
-  printf("Time taken %.2f\n", (Timer.time() - start));
-  // wait(200, msec);
-  // targEncdL = encdL;
-  // targEncdR = encdR;
-  resetPrevEncd();
+  targEncdL = rot_lbValue;
+  targEncdR = rot_rbValue;
 }
 
 int Control(){
-  double prevErrorEncdL = 0, prevErrorEncdR = 0, integralL = 0, integralR = 0;
-  while(true){
-    errorEncdL = targEncdL - rot_lbValue;
-    errorEncdR = targEncdR - rot_rbValue;
+  double prevErrorEncdL = 0, prevErrorEncdR = 0, prevErrorBearing = 0;
+  while(auton) {
+    if(!imu.isCalibrating() && !pauseBase) {
+      if(turnMode) {
+        errorBearing = targBearing - bearing;
+        double deltaErrorBearing = errorBearing - prevErrorBearing;
 
-    if(fabs(errorEncdL) < KI_LIMIT) integralL += errorEncdL;
-    else integralL = 0;
-    if(fabs(errorEncdR) < KI_LIMIT) integralR += errorEncdR;
-    else integralR = 0;
+        targPowerL = errorBearing * kP + deltaErrorBearing * kD;
+        targPowerR = -targPowerL;
 
-    double deltaErrorEncdL = (errorEncdL - prevErrorEncdL);
-    double deltaErrorEncdR = (errorEncdR - prevErrorEncdR);
+        prevErrorBearing = errorBearing;
+      }
+      else {
+        errorEncdL = targEncdL - rot_lbValue;
+        errorEncdR = targEncdR - rot_rbValue;
 
-    targPowerL = errorEncdL * kP + integralL * kI + deltaErrorEncdL * kD;
-    targPowerR = errorEncdR * kP + integralR * kI + deltaErrorEncdR * kD;
+        double deltaErrorEncdL = errorEncdL - prevErrorEncdL;
+        double deltaErrorEncdR = errorEncdR - prevErrorEncdR;
 
-    prevErrorEncdL = errorEncdL;
-    prevErrorEncdR = errorEncdR;
+        targPowerL = errorEncdL * kP + deltaErrorEncdL * kD;
+        targPowerR = errorEncdR * kP + deltaErrorEncdR * kD;
 
-    double deltaPowerL = targPowerL - powerL;
-    powerL += abscap(deltaPowerL, RAMPING_POW);
-    double deltaPowerR = targPowerR - powerR;
-    powerR += abscap(deltaPowerR, RAMPING_POW);
+        prevErrorEncdL = errorEncdL;
+        prevErrorEncdR = errorEncdR;
+      }
 
-    powerL = abscap(powerL, MAX_POW);
-    powerR = abscap(powerR, MAX_POW);
+      double deltaPowerL = targPowerL - powerL;
+      powerL += abscap(deltaPowerL, RAMPING_POW);
+      double deltaPowerR = targPowerR - powerR;
+      powerR += abscap(deltaPowerR, RAMPING_POW);
 
+      powerL = abscap(powerL, MAX_POW);
+      powerR = abscap(powerR, MAX_POW);
+    }
     leftBase.spin(fwd, powerL, pct);
     rightBase.spin(fwd, powerR, pct);
+    wait(5, msec);
   }
   return 0;
 }
 
 void resetCoords(double x, double y, double angleInDeg){
-  leftBase.resetRotation();
-  rightBase.resetRotation();
-
-  rot_lb.resetPosition();
-  rot_rb.resetPosition();
   resetPrevEncd();
 
+  targBearing = bearing;
   targEncdL = 0;
   targEncdR = 0;
 

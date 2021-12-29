@@ -32,10 +32,8 @@ competition Competition;
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
-
 }
 
 /*---------------------------------------------------------------------------*/
@@ -52,6 +50,10 @@ void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
+  resetCoords(0,0,0);
+  baseMove(24);
+  waitBase(2000);
+  auton = t;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -65,7 +67,6 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-
   int driveMode = 1, tbMode = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
@@ -160,11 +161,10 @@ void usercontrol(void) {
     //back mogo
     if((count-pcount2) == 10 && pcount2 != 0) backMogo.set(t); //close
 
-    
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", tbMode);
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("Lift Pos = %d, %.1f", liftPos, pot_liftValue);
+    Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
 
@@ -179,10 +179,10 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-  //task controlTask(Control);
+  task controlTask(Control);
   task sensorTask(Sensors);
   task odomTask(Odometry);
-  //task debugTask(Debug);
+  task debugTask(Debug);
   task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.
@@ -194,6 +194,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(1, msec);
+    wait(10, msec);
   }
 }

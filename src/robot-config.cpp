@@ -33,21 +33,13 @@ inertial imu = inertial(PORT20);
 
 timer Timer;
 controller Controller1 = controller(primary);
-int hi = 0;
 
 //initialise
 void vexcodeInit(){
-  Controller1.Screen.clearScreen();
-  /*imu.calibrate();
-  while(imu.isCalibrating()) {
-    Controller1.Screen.setCursor(1,1);
-    Controller1.Screen.print("Calibrating IMU");
-    wait(20, msec);
-  }
-  Controller1.Screen.clearLine(1);*/
+  imu.calibrate(5000);
+  if(imu.isCalibrating()) {wait(20, msec);}
   frontMogo.set(t);
   twoBar(t);
-  rot_lb.resetPosition();
-  rot_rb.resetPosition();
-
+  Controller1.Screen.clearScreen();
+  resetCoords(0,0,0);
 }

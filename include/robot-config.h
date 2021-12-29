@@ -25,6 +25,7 @@ extern digital_out liftAssistR;
 extern rotation rot_lb;
 extern rotation rot_rb;
 extern pot pot_lift;
+extern inertial imu;
 //extern inertial imu;
 
 extern timer Timer;
