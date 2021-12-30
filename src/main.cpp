@@ -68,7 +68,7 @@ void autonomous(void) {
 
 void usercontrol(void) {
   auton = f;
-  int driveMode = 1, tbMode = 0;
+  int driveMode = 1;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
   int count = 0, pcount = 0;
@@ -90,7 +90,7 @@ void usercontrol(void) {
       RBSpeed = Controller1.Axis3.position() - Controller1.Axis1.position(); 
       drivePrint = "Arcade  ";
     }
-    else {
+    else { //tank
       LBSpeed = Controller1.Axis3.position();
       RBSpeed = Controller1.Axis2.position();
       drivePrint = "Tank    ";
@@ -109,14 +109,11 @@ void usercontrol(void) {
     
     //2 bar
     if(l1 == pl1 && l1!= 0) {
-      if(tbMode == 1) {tbMode -= 1;}
-      else {tbMode += 1;}
-
-      if(tbMode == 0){
-        twoBar(t); //toggle open
+      if(twoBarL.value()){
+        twoBar(f); //toggle close
       }
       else{
-        twoBar(f); //toggle close
+        twoBar(t); //toggle open
         backMogo.set(f);
       }
       l1 = 0;
@@ -126,7 +123,7 @@ void usercontrol(void) {
       if(backMogo.value()) {
         backMogo.set(f); //close
       }
-      else {
+      else if(twoBarL.value()){
         backMogo.set(t); //open
       }
       ll2 = 0;
@@ -165,7 +162,7 @@ void usercontrol(void) {
     if((count-pcount) == 10 && pcount != 0) frontMogo.set(t); //close
 
     Controller1.Screen.setCursor(1,1);
-    Controller1.Screen.print("Two Bar = %d", tbMode);
+    Controller1.Screen.print("Two Bar = %d", twoBarL.value());
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
