@@ -116,20 +116,21 @@ void usercontrol(void) {
       }
       else{
         twoBar(f); //toggle close
+        backMogo.set(t);
       }
       l1 = 0;
     }
     //back mogo intake
     else if(ll2 == pll2 && ll2!= 0) {
-      backMogo.set(f);
-      pcount2 = count;
+      backMogo.set(f); //open
+      pcount2 = count; //count to close back
       ll2 = 0;
     }
     //front mogo intake
     else if(r2 == pr2 && r2 != 0) {
-      frontMogo.set(f);
+      frontMogo.set(f); //open
       if(liftPos == 0) {
-        pcount = count;
+        pcount = count; //count to close back
       }
       r2 = 0;
     }
