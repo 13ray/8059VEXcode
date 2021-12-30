@@ -71,7 +71,7 @@ void usercontrol(void) {
   int driveMode = 1, tbMode = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
-  int count = 0, pcount = 0, pcount2 = 0;
+  int count = 0, pcount = 0;
   int by = 0, r1 = 0, r2 = 0, lr1 = 0, lr2 = 0, l1 = 0, ll2 = 0, pby = 0, pr1 = 0, pr2 = 0, plr1 = 0, plr2 = 0, pl1 = 0, pll2 = 0;
   
   // User control code here, inside the loop
@@ -112,19 +112,23 @@ void usercontrol(void) {
       if(tbMode == 1) {tbMode -= 1;}
       else {tbMode += 1;}
 
-      if(tbMode%2 == 0){
+      if(tbMode == 0){
         twoBar(t); //toggle open
       }
       else{
         twoBar(f); //toggle close
-        backMogo.set(t);
+        backMogo.set(f);
       }
       l1 = 0;
     }
     //back mogo intake
     else if(ll2 == pll2 && ll2!= 0) {
-      backMogo.set(f); //open
-      pcount2 = count; //count to close back
+      if(backMogo.value()) {
+        backMogo.set(f); //close
+      }
+      else {
+        backMogo.set(t); //open
+      }
       ll2 = 0;
     }
     //front mogo intake
@@ -159,9 +163,6 @@ void usercontrol(void) {
     }
     //front mogo
     if((count-pcount) == 10 && pcount != 0) frontMogo.set(t); //close
-
-    //back mogo
-    if((count-pcount2) == 10 && pcount2 != 0) backMogo.set(t); //close
 
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", tbMode);
