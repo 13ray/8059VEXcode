@@ -33,6 +33,9 @@ int Lift() {
       case 2: tarliftPos = 125; break; //52
     }
 
+    if(liftPos == 0) {potRange = 2;}
+    else {potRange = 3;}
+
     int potDiff = pot_liftValue - tarliftPos;
     if(potDiff > potRange || potDiff < -potRange) {
       if(pot_liftValue < tarliftPos) { //going down

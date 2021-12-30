@@ -194,6 +194,6 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(10, msec);
+    wait(5, msec);
   }
 }
