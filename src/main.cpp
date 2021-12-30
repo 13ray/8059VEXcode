@@ -50,10 +50,10 @@ void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
+  auton = t;
   resetCoords(0,0,0);
   baseMove(24);
   waitBase(2000);
-  auton = t;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -67,6 +67,7 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+  auton = f;
   int driveMode = 1, tbMode = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
