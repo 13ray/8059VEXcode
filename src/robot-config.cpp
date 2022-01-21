@@ -8,27 +8,28 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-motor leftFront = motor(PORT3, ratio18_1, f);
-motor leftMid = motor(PORT1, ratio18_1, t);
-motor leftBack = motor(PORT2, ratio18_1, f);
-motor rightFront = motor(PORT8, ratio18_1, t);
-motor rightMid = motor(PORT10, ratio18_1, f);
-motor rightBack = motor(PORT9, ratio18_1, t);
+motor leftFront = motor(PORT11, ratio18_1, f);
+motor leftMid = motor(PORT3, ratio18_1, t);
+motor leftBack = motor(PORT4, ratio18_1, f);
+motor rightFront = motor(PORT20, ratio18_1, t);
+motor rightMid = motor(PORT8, ratio18_1, f);
+motor rightBack = motor(PORT7, ratio18_1, t);
 motor_group leftBase = motor_group(leftFront, leftMid, leftBack);
 motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
-motor leftLift = motor(PORT5, ratio36_1, f);
-motor rightLift = motor(PORT6,ratio36_1, t);
+motor leftLift = motor(PORT1, ratio36_1, t);
+motor rightLift = motor(PORT10,ratio36_1, f);
 
-digital_out twoBarL = digital_out(Brain.ThreeWirePort.B);
-digital_out twoBarR = digital_out(Brain.ThreeWirePort.D);
+digital_out twoBarL = digital_out(Brain.ThreeWirePort.A);
+digital_out twoBarR = digital_out(Brain.ThreeWirePort.B);
 digital_out frontMogo = digital_out(Brain.ThreeWirePort.G);
-digital_out backMogo = digital_out(Brain.ThreeWirePort.C);
-digital_out liftAssistL = digital_out(Brain.ThreeWirePort.E);
-digital_out liftAssistR = digital_out(Brain.ThreeWirePort.F);
+digital_out latch = digital_out(Brain.ThreeWirePort.H);
+//digital_out backMogo = digital_out(Brain.ThreeWirePort.C);
+//digital_out liftAssistL = digital_out(Brain.ThreeWirePort.E);
+//digital_out liftAssistR = digital_out(Brain.ThreeWirePort.F);
 
-rotation rot_lb = rotation(PORT4, false);
-rotation rot_rb = rotation(PORT7, true);
-pot pot_lift = pot(Brain.ThreeWirePort.H);
+rotation rot_lb = rotation(PORT5, false);
+rotation rot_rb = rotation(PORT6, true);
+pot pot_lift = pot(Brain.ThreeWirePort.F);
 inertial imu = inertial(PORT20);
 
 timer Timer;

@@ -35,11 +35,11 @@ void printAllTerminal() {
 int Debug(){
   while(true){
     printPosMaster();
-    /*if(imu.isCalibrating()) {
+    if(imu.isCalibrating()) {
       printf("imu is calibrating...\n");
       Brain.Screen.setCursor(1,1);
       Brain.Screen.print("Calibrating IMU");
-    }else {*/
+    }else {
       Brain.Screen.clearScreen();
       switch(DEBUG_MODE){
         case 1: printPosTerminal(); break;
@@ -55,4 +55,4 @@ int Debug(){
   }
   return 0;
 }
-//}
+}
