@@ -2,5 +2,6 @@
 #define _8059_SIMPLE_PID_SENSORS_HPP_
 extern int Sensors();
 extern int pot_liftValue;
-extern double rot_lbValue, rot_rbValue, bearing, ang;
+extern double rot_lbValue, rot_rbValue, bearing, ang, liftEncdl, liftEncdr;
+
 #endif

@@ -1,4 +1,5 @@
 #include "vex.h"
+#include "math.h"
 
 //values or thresholds
 int liftPos = 0, tarliftPos = 202, prevliftPos = 0, potRange = 3;
@@ -11,11 +12,17 @@ void lift(int s) {
   rightLift.spin(fwd, s, pct);
 }
 
+
 void lift(int s, int t) {
   lift(s);
   wait(t, msec);
   leftLift.stop(hold);
   rightLift.stop(hold);
+}
+
+void liftRot(int rot){
+  leftLift.rotateTo(rot,deg);
+  rightLift.rotateTo(rot, deg);
 }
 
 //two bar pistons
@@ -24,8 +31,7 @@ void twoBar(bool s) {
   twoBarR.set(s);
 }
 
-//move lift to specific positions
-int Lift() {
+int Lift() {         //move to specific position 
   while(t) {
     switch(liftPos) {
       case 0: tarliftPos = 202; break; //80
@@ -33,16 +39,25 @@ int Lift() {
       case 2: tarliftPos = 125; break; //52
     }
 
+    int lw = 0;
+
     if(liftPos == 0) {potRange = 2;}
     else {potRange = 3;}
 
-    int potDiff = pot_liftValue - tarliftPos;
-    if(potDiff > potRange || potDiff < -potRange) {
-      if(pot_liftValue < tarliftPos) { //going down
+    int potDiff = absD(pot_liftValue - tarliftPos);
+
+    if(potDiff > potRange) {
+      if(pot_liftValue < (tarliftPos+lw)) { //going down
         lift(-100);
+        if(pot_liftValue < tarliftPos+lw){
+          lift(-30);
+        }
       }
-      else if(pot_liftValue > tarliftPos) { //going up
+      else if(pot_liftValue > (tarliftPos + lw)) { //going up
         lift(100);
+        if(pot_liftValue > tarliftPos){
+          lift(30);
+        }
       }
     }
     else {

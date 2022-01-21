@@ -6,6 +6,7 @@ extern bool f, t;
 
 void lift(int s);
 void lift(int s, int t);
+void liftRot(int rot);
 void twoBar(bool s);
 
 int Lift();

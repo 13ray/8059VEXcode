@@ -15,6 +15,12 @@ double abscap(double x, double abscap){
   else return x;
 }
 
+double absD(double q){
+  if(q>0) return q;
+  else if(q<0) return -q;
+  else return 0;
+}
+
 double min(double a, double b) {
   if(a>b) return b;
   else return a;
