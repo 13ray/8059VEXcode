@@ -106,8 +106,9 @@ void usercontrol(void) {
     else if(Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {l1r1 += 1;} 
     else if(Controller1.ButtonR1.pressing() && !Controller1.ButtonL2.pressing()) {r1 += 1;}
     else if(Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing()) {l1 += 1;}
-    else if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {ll2 += 1;}
-*/
+    else if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {ll2 += 1;} */
+    
+    
     ///////////2 bar
     if(Controller1.ButtonL1.pressing()){
       if(twoBarL.value()){
@@ -115,14 +116,31 @@ void usercontrol(void) {
       }
       else{
         twoBar(t);
+      }
     }
 
     ///////////4 bar
     if(Controller1.ButtonL2.pressing()){
-      frontMogo.set(f); //open
+      frontMogo.set(f); 
+      wait(1000,msec);
       }else{
         frontMogo.set(t);
       }
+
+    
+    ///Latch
+    if(Controller1.ButtonUp.pressing()){
+      if(liftPos == 2){
+        if(liftPos == 2){
+          liftPos += 1;
+        }
+      }
+      Latch(f);
+      if(liftPos == 3){
+        liftPos +=1;
+      }
+    }else{
+      Latch(t);
     }
 
 ////Lift
@@ -138,6 +156,8 @@ void usercontrol(void) {
         liftPos -= 1;
       }else if(liftPos == 0){
         Controller1.rumble("-");
+        //printf("curr angle: %d\n", pot_liftValue);
+        
       }
     }
     Controller1.Screen.setCursor(1,1);
@@ -146,8 +166,33 @@ void usercontrol(void) {
     Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
-  }}
+    printf("curr angle: %.2f, %d\n", liftEncdl, pot_liftValue);
 
+  }
+}
+
+//
+// Main will set up the competition functions and callbacks.
+//
+int main() {
+  task controlTask(Control);
+  task sensorTask(Sensors);
+  task odomTask(Odometry);
+  //task debugTask(Debug);
+  task liftTask(Lift);
+
+  // Set up callbacks for autonomous and driver control periods.
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
+
+  // Run the pre-autonomous function.
+  pre_auton();
+
+  // Prevent main from exiting with an infinite loop.
+  while (true) {
+    wait(5, msec);
+  }
+}
 
     /*lift
     else if(l1r1 == pl1r1 && l1r1 != 0) {
@@ -223,25 +268,3 @@ void usercontrol(void) {
       l2 = 0;
     }*/
 
-//
-// Main will set up the competition functions and callbacks.
-//
-int main() {
-  task controlTask(Control);
-  task sensorTask(Sensors);
-  task odomTask(Odometry);
-  //task debugTask(Debug);
-  task liftTask(Lift);
-
-  // Set up callbacks for autonomous and driver control periods.
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(usercontrol);
-
-  // Run the pre-autonomous function.
-  pre_auton();
-
-  // Prevent main from exiting with an infinite loop.
-  while (true) {
-    wait(5, msec);
-  }
-}

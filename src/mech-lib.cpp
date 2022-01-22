@@ -2,7 +2,8 @@
 #include "math.h"
 
 //values or thresholds
-int liftPos = 0, tarliftPos = 169, prevliftPos = 0, potRange = 2;
+int liftPos = 0, prevliftPos = 0;
+double tarliftPos = 75, potRange = 0.5;
 
 bool f = false, t = true;
 
@@ -31,38 +32,31 @@ void twoBar(bool s) {
   twoBarR.set(s);
 }
 
+//Latch pistons 
+void Latch(bool s){
+  latch.set(s);
+}
+
 int Lift() {         //move to specific position 
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos = 170; break; //80
-      case 1: tarliftPos = 180; break; //75
-      case 2: tarliftPos = 253; break; //52
+      case 0: tarliftPos =75; break; //170
+      case 1: tarliftPos = 65; break; //180
+      case 2: tarliftPos = 17; break; //252
+      case 3: tarliftPos = 25; break; //before latch 
+      case 4: tarliftPos = 50; break; //hang
     }
-
-    //int lw = 5;
-
-    /*if(liftPos == 0) {potRange = 2;}
-    else {potRange = 3;}*/
-
     int potDiff = tarliftPos - pot_liftValue;
-    double kP= 5;
+    double kP= 10;
+    double kD = 5;
     //printf("lift val:%d\n", pot_liftValue);
 
     if(abs(potDiff) > potRange) {
-      // if(pot_liftValue < (tarliftPos+lw)) { //going down
-      //   lift(-100);
-      //   if(pot_liftValue < tarliftPos+lw){
-      //     lift(-30);
-      //   }
-      // }
-      // else if(pot_liftValue > (tarliftPos + lw)) { //going up
-      //   lift(100);
-      //   if(pot_liftValue > tarliftPos){
-      //     lift(30);
-      //   }
-      // }
-
       lift(potDiff*kP);
+      if(abs(potDiff) < 40){
+        lift(potDiff*kD);
+      }
+
     }
     else {
       leftLift.stop(hold);
@@ -71,3 +65,7 @@ int Lift() {         //move to specific position
   }
   return(0);
 }
+
+//void Hang(bool s){
+  
+
