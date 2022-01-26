@@ -19,10 +19,16 @@ motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
 motor leftLift = motor(PORT1, ratio36_1, f);
 motor rightLift = motor(PORT10,ratio36_1, t);
 
-digital_out twoBarL = digital_out(Brain.ThreeWirePort.A);
-digital_out twoBarR = digital_out(Brain.ThreeWirePort.B);
-digital_out frontMogo = digital_out(Brain.ThreeWirePort.H);
-digital_out latch = digital_out(Brain.ThreeWirePort.G);
+
+vex::pneumatics twoBarL = vex::pneumatics(Brain.ThreeWirePort.A); 
+vex::pneumatics twoBarR = vex::pneumatics(Brain.ThreeWirePort.B); 
+vex::pneumatics frontMogo = vex::pneumatics(Brain.ThreeWirePort.H); 
+vex::pneumatics latch = vex::pneumatics(Brain.ThreeWirePort.G); 
+//digital_out twoBarL = digital_out(Brain.ThreeWirePort.A);
+// digital_out twoBarR = digital_out(Brain.ThreeWirePort.B);
+// digital_out frontMogo = digital_out(Brain.ThreeWirePort.H);
+// digital_out latch = digital_out(Brain.ThreeWirePort.G);
+
 //digital_out backMogo = digital_out(Brain.ThreeWirePort.C);
 //digital_out liftAssistL = digital_out(Brain.ThreeWirePort.E);
 //digital_out liftAssistR = digital_out(Brain.ThreeWirePort.F);
@@ -39,9 +45,9 @@ controller Controller1 = controller(primary);
 void vexcodeInit(){
   imu.calibrate(5000);
   if(imu.isCalibrating()) {wait(20, msec);}
-  frontMogo.set(t);
-  twoBar(t);
-  Latch(t);
+  frontMogo.set(f);//up
+  twoBar(f);//up
+  Latch(f);//forward
   Controller1.Screen.clearScreen();
   resetCoords(0,0,0);
 }
