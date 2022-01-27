@@ -3,7 +3,7 @@
 
 //values or thresholds
 int liftPos = 0, prevliftPos = 0;
-double tarliftPos = 139, potRange = 0.5;
+double tarliftPos = 139.5, potRange = 0.5;
 
 bool f = false, t = true;
 
@@ -56,7 +56,7 @@ void Latch(bool s){
 int Lift() {         //move to specific position 
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos =139; break; //170
+      case 0: tarliftPos =139.5; break; //170
       case 1: tarliftPos = 99; break; //platform 
       case 2: tarliftPos = 72; break; //limit
       case 3: tarliftPos = 80; break; //before latch 
