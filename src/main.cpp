@@ -85,10 +85,14 @@ void usercontrol(void) {
   
   // User control code here, inside the loop
   while (t) {
+    
+    //for pistons
     bool L1 = Controller1.ButtonL1.pressing();
     bool L2 = Controller1.ButtonL2.pressing();
     bool UP = Controller1.ButtonUp.pressing();
+
     count += 1;
+
     //drivemode
     if(Controller1.ButtonY.pressing()) by += 1;
     if(by == pby && by!= 0) driveMode += 1, by = 0;
@@ -119,6 +123,7 @@ void usercontrol(void) {
     else if(Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing()) {l1 += 1;}
     else if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {ll2 += 1;} */
     
+  
 
     /////////2 bar
     if(L1 && !L1Pressed){
@@ -128,13 +133,13 @@ void usercontrol(void) {
     }else if(!L1) L1Pressed = false;
     
     if(twoBarTE){
-      twoBar(t);
-    }else{
       twoBar(f);
+    }else{
+      twoBar(t);
     }
 
     ///////////4 bar
-    if(L2 && !L2Pressed){
+    /*if(L2 && !L2Pressed){
       L2Pressed = t;
       frontTE = !frontTE;
     }else if(!L2) L2Pressed = false;
@@ -143,8 +148,13 @@ void usercontrol(void) {
       frontMOG(t);
     }else{
       frontMOG(f);
-    }
+    }*/
 
+    if(L2){
+      waitfrontMOG(1, 0);
+    }else{
+      waitfrontMOG(1, 1);
+    }
     ///Latch
     
     if(UP && !UPPressed){
@@ -199,6 +209,7 @@ int main() {
   task odomTask(Odometry);
   //task debugTask(Debug);
   task liftTask(Lift);
+  
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);

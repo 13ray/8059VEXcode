@@ -10,6 +10,7 @@ void lift(int s, int t);
 void liftRot(int rot);
 void twoBar(bool s);
 void frontMOG(bool s);
+void waitfrontMOG(float t, int waitForCompletion);
 void Latch(bool s);
 //void Hang(bool s);
 

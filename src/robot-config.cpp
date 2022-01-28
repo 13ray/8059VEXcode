@@ -45,8 +45,8 @@ controller Controller1 = controller(primary);
 void vexcodeInit(){
   imu.calibrate(5000);
   if(imu.isCalibrating()) {wait(20, msec);}
-  frontMogo.set(f);//up
-  twoBar(f);//up
+  frontMogo.set(f);//f-up
+  twoBar(f);//f-up
   Latch(f);//forward
   Controller1.Screen.clearScreen();
   resetCoords(0,0,0);

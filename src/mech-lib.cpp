@@ -44,6 +44,14 @@ void frontMOG(bool s){
   }
 }
 
+void waitfrontMOG(float t, int waitForCompletion){
+  frontMogo.open();
+  wait(t,sec);
+  if(waitForCompletion == 1){
+    frontMogo.close();
+  }
+}
+
 //Latch pistons true = open = backwards
 void Latch(bool s){
   if(s==t){
