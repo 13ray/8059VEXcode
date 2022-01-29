@@ -27,7 +27,7 @@ void liftRot(int rot){
 
 //two bar pistons: true = open
 void twoBar(bool s) {
-  if(s==t){
+  if(s){
     twoBarL.open();
     twoBarR.open();
   }else{
@@ -37,16 +37,17 @@ void twoBar(bool s) {
 }
 
 void frontMOG(bool s){
-  if(s==t){
+  if(s){
     frontMogo.open();
   }else{
     frontMogo.close();
   }
 }
 
-void waitfrontMOG(float t, int waitForCompletion){
+//
+void waitfrontMOG(int t, int waitForCompletion){
   frontMogo.open();
-  wait(t,sec);
+  wait(t,msec);
   if(waitForCompletion == 1){
     frontMogo.close();
   }
@@ -54,12 +55,24 @@ void waitfrontMOG(float t, int waitForCompletion){
 
 //Latch pistons true = open = backwards
 void Latch(bool s){
-  if(s==t){
+  if(s){
     latch.open();
   }else{
     latch.close();
   }
 }
+
+//hang 
+void hang(){
+  if(liftPos == 2){
+    liftPos += 1;
+  }
+  Latch(t);
+  if(liftPos == 3){
+    liftPos +=1;
+  }
+}
+
 
 int Lift() {         //move to specific position 
   while(t) {
@@ -72,10 +85,10 @@ int Lift() {         //move to specific position
     }
 
     double potDiff = tarliftPos - pot_liftValue;
-    printf("potDiff :%.2f\n", potDiff);
-    printf("tarliftPos :%.2f\n", tarliftPos);
-    printf("pot_liftValue :%d\n", pot_liftValue);
-    printf("\n");
+    // printf("potDiff :%.2f\n", potDiff);
+    // printf("tarliftPos :%.2f\n", tarliftPos);
+    // printf("pot_liftValue :%d\n", pot_liftValue);
+    // printf("\n");
     double kP= 10;
     double kD = 5;
     //printf("lift val:%d\n", pot_liftValue);
@@ -94,7 +107,4 @@ int Lift() {         //move to specific position
   }
   return(0);
 }
-
-//void Hang(bool s){
   
-
