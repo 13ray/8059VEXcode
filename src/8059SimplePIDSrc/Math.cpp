@@ -9,6 +9,16 @@ double boundDeg(double deg){
   if(res < 0) res += 360;
   return res;
 }
+double boundDegTurn(double deg){
+  double res = boundDeg(deg);
+  if(res>180) res -= 360;
+  return res;
+}
+double boundRadTurn(double rad){
+  double res = boundRad(rad);
+  if (res > PI) res -= twoPI;
+  return res;
+}
 double abscap(double x, double abscap){
   if(x > abscap) return abscap;
   else if(x < -abscap) return -abscap;
@@ -19,11 +29,6 @@ double absD(double q){
   if(q>0) return q;
   else if(q<0) return -q;
   else return 0;
-}
-
-double min(double a, double b) {
-  if(a>b) return b;
-  else return a;
 }
 
 int sign(double x){

@@ -51,9 +51,6 @@ void autonomous(void) {
   // Insert autonomous user code here.
   // ..........................................................................
   auton = t;
-  resetCoords(0,0,0);
-  baseMove(24);
-  waitBase(2000);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -71,13 +68,10 @@ void usercontrol(void) {
   int driveMode = 1;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
-  int count = 0; //, pcount = 0;
   int by = 0, pby = 0;
   bool twoBarTE = false; //twoBar toggle Enabled
-  bool frontTE = false; //frontmogos toggle Enabled
   bool latchTE = false; //latch toggle Enabled
   bool L1Pressed = false; //flag
-  bool L2Pressed = false;
   bool UPPressed = false;
 
     
@@ -90,8 +84,6 @@ void usercontrol(void) {
     bool L1 = Controller1.ButtonL1.pressing();
     bool L2 = Controller1.ButtonL2.pressing();
     bool UP = Controller1.ButtonUp.pressing();
-
-    count += 1;
 
     //drivemode
     if(Controller1.ButtonY.pressing()) by += 1;
@@ -123,56 +115,33 @@ void usercontrol(void) {
     else if(Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing()) {l1 += 1;}
     else if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {ll2 += 1;} */
     
-  
-
-    /////////2 bar
+    //2 bar 
     if(L1 && !L1Pressed){
       L1Pressed = t;
       twoBarTE = !twoBarTE;
-      //twoBar(t);
     }else if(!L1) L1Pressed = false;
-    
-    if(twoBarTE){
-      twoBar(f);
-    }else{
-      twoBar(t);
-    }
 
-    ///////////4 bar
-    /*if(L2 && !L2Pressed){
-      L2Pressed = t;
-      frontTE = !frontTE;
-    }else if(!L2) L2Pressed = false;
-    
-    if(frontTE){
-      frontMOG(t);
-    }else{
-      frontMOG(f);
-    }*/
+    twoBar(!twoBarTE);
 
+    //front mogo
     if(L2){
-      waitfrontMOG(1, 0);
+      waitfrontMOG(1000, 0);
     }else{
-      waitfrontMOG(1, 1);
+      waitfrontMOG(1000, 1);
     }
-    ///Latch
-    
+
+    ///latch
     if(UP && !UPPressed){
       UPPressed = t;
       latchTE = !latchTE;
     }else if(!UP) UPPressed = false;
 
+    //auto hang
     if(latchTE){
-      if(liftPos == 2){
-          liftPos += 1;
-        }
-        Latch(t);
-        if(liftPos == 3){
-          liftPos +=1;
-          }
+      hang();
     }
 
-////Lift
+    //Lift
     if(Controller1.ButtonR1.pressing()){
       if(liftPos < 2){
         liftPos +=1;

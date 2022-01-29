@@ -13,8 +13,8 @@
 /** refer to mathUtils.cpp for function documentation */
 double boundRad(double rad);
 double boundDeg(double deg);
+double boundDegTurn(double deg);
 double abscap(double x, double abscap);
 double absD(double x);
-double min(double a, double b);
 int sign(double x);
 #endif
