@@ -1,5 +1,5 @@
 #include "vex.h"
-
+/*
 #define DEFAULT_KP 0.0012
 #define DEFAULT_KD 0
 #define DEFAULT_TURN_KP 0.95
@@ -177,7 +177,7 @@ void resetCoords(double x, double y, double angleInDeg){
   setCoords(x, y, angleInDeg);
 }
 
-/*
+*/
 #define DEFAULT_KP 0.27
 #define DEFAULT_KD 0.2
 #define DEFAULT_TURN_KP 1.2 // 20 degrees = 2.5, 180 degrees = 1
@@ -304,4 +304,3 @@ void resetCoords(double x, double y, double angleInDeg){
 
   setCoords(x, y, angleInDeg);
 }
-*/
