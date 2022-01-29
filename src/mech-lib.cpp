@@ -53,11 +53,6 @@ void waitfrontMOG(int t, int waitForCompletion){
   }
 }
 
-void mogoFB(bool s){
-  frontMOG(s);
-  twoBar(s);
-}
-
 //Latch pistons true = open = backwards
 void Latch(bool s){
   if(s){
@@ -94,14 +89,14 @@ int Lift() {         //move to specific position
     // printf("tarliftPos :%.2f\n", tarliftPos);
     // printf("pot_liftValue :%d\n", pot_liftValue);
     // printf("\n");
-    double kP1= 10;
-    double kP2 = 5;
+    double kP= 10;
+    double kD = 5;
     //printf("lift val:%d\n", pot_liftValue);
 
     if(absD(potDiff) > potRange) {
-      lift(potDiff*kP1);
+      lift(potDiff*kP);
       if(absD(potDiff) < 10){
-        lift(potDiff*kP2);
+        lift(potDiff*kD);
       }
 
     }
