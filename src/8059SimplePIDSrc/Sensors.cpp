@@ -8,13 +8,9 @@ int Sensors() {
     if(!imu.isCalibrating()) {
       rot_lbValue = rot_lb.position(deg);
       rot_rbValue = rot_rb.position(deg);
-      bearing = imu.rotation(deg);
+      bearing = imu.heading(deg);
       ang = halfPI - bearing * toRad;
     }
-    
-    
-    leftLift.setPosition(0,deg);
-    rightLift.setPosition(0,deg);
 
     liftEncdl = leftLift.position(deg);
     liftEncdr = rightLift.position(deg);

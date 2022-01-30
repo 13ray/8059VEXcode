@@ -3,5 +3,6 @@
 #include "mech-lib.h"
 #include "robot-config.h"
 
+void test();
 
 #endif

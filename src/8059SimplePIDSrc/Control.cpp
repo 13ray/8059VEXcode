@@ -1,12 +1,19 @@
 #include "vex.h"
 
-#define DEFAULT_KP 0.27
-#define DEFAULT_KD 0.2
-#define DEFAULT_TURN_KP 1.2 // 20 degrees = 2.5, 180 degrees = 1
-#define DEFAULT_TURN_KD 0.6
-#define RAMPING_POW 1.2
+double DEFAULT_KP = 0.15, DEFAULT_KD = 1.2; //no mogos on robot
+double FMG_KP = 0.14, FMG_KD = 1.5; //1 mogo in front
+double FMGS_KP = 0.13, FMGS_KD = 3; //2 mogos in front
+double BMG_KP = 0.14, BMG_KD = 0.5; //back mogo only / back mogo and 1 front
+double MGS_KP = 0.13, MGS_KD = 0.3;//all 3 mogos
+double FMG_TURN_KP = 1.05, FMG_TURN_KD = 0.7; //1 mogo front right 
+double FMGS_TURN_KP = 1.3, FMGS_TURN_KD = 0; //2 mogos in front
+double BMG_TURN_KP = 0.75, BMG_TURN_KD = 0; //back mogo only 
+double BMGFR_TURN_KP = 0.74, BMGFR_TURN_KD = 0.2; //back mogo and front right
+double MGS_TURN_KP = 1.1, MGS_TURN_KD = 0; //all 3 mogos
+
+#define RAMPING_POW 1
 #define DISTANCE_LEEWAY 15
-#define BEARING_LEEWAY 1.5
+#define BEARING_LEEWAY 1
 #define MAX_POW 100
 
 double targEncdL = 0, targEncdR = 0, targBearing = 0;
@@ -18,7 +25,10 @@ double kP = DEFAULT_KP, kD = DEFAULT_KD;
 bool turnMode = false, pauseBase = false, auton = f;
 
 void baseMove(double dis, double kp, double kd){
+  targEncdL = rot_lbValue;
+  targEncdR = rot_rbValue;
   turnMode = false;
+
   targEncdL += dis/inPerDeg;
   targEncdR += dis/inPerDeg;
 
@@ -36,7 +46,7 @@ void baseTurn(double p_bearing, double kp, double kd){
 	kD = kd;
 }
 void baseTurn(double bearing){
-  baseTurn(bearing, DEFAULT_TURN_KP, DEFAULT_TURN_KD);
+  baseTurn(bearing, FMG_TURN_KD, FMG_TURN_KD);
 }
 
 void powerBase(double l, double r) {
@@ -70,17 +80,16 @@ void waitBase(double cutoff){
   }else{
     while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
   }
-
-  targEncdL = rot_lbValue;
-  targEncdR = rot_rbValue;
+  printf("time taken, %.f \n", start);
 }
 
 int Control(){
   double prevErrorEncdL = 0, prevErrorEncdR = 0, prevErrorBearing = 0;
-  while(auton) {
+  while(t) {
     if(!imu.isCalibrating() && !pauseBase) {
       if(turnMode) {
         errorBearing = targBearing - bearing;
+        if(absD(errorBearing) > 180) errorBearing = -(errorBearing-180);
         double deltaErrorBearing = errorBearing - prevErrorBearing;
 
         targPowerL = errorBearing * kP + deltaErrorBearing * kD;

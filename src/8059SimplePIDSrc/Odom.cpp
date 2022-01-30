@@ -1,7 +1,7 @@
 #include "vex.h"
 
 double X = 0, Y = 0, prevEncdL = 0, prevEncdR = 0;
-const double inPerDeg = 0.0461916735714906;//0.02399827721;
+const double inPerDeg = 0.0242;
 
 void setCoords(double x, double y, double b){
   X = x;

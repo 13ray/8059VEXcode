@@ -1,9 +1,8 @@
 #include "vex.h"
-#include "math.h"
 
 //values or thresholds
 int liftPos = 0, prevliftPos = 0;
-double tarliftPos = 139.5, potRange = 0.5;
+int tarliftPos = 139, potRange = 2, potDiff = 0;
 
 bool f = false, t = true;
 
@@ -27,7 +26,7 @@ void liftRot(int rot){
 
 //two bar pistons: true = open
 void twoBar(bool s) {
-  if(s==t){
+  if(s){
     twoBarL.open();
     twoBarR.open();
   }else{
@@ -36,21 +35,20 @@ void twoBar(bool s) {
   }
 }
 
+//front mogo
 void frontMOG(bool s){
-  if(s==t){
+  if(s){
     frontMogo.open();
   }else{
     frontMogo.close();
   }
 }
 
-void waitfrontMOG(int t, int waitForCompetition){
+//open front mogo for set time then close
+void timerfrontMOG(int t){
   frontMogo.open();
   wait(t,msec);
   frontMogo.close();
-  if(waitForCompetition == 1){
-    frontMogo.close();
-  }
 }
 
 //Latch pistons true = open = backwards
@@ -62,31 +60,34 @@ void Latch(bool s){
   }
 }
 
+//hanging process
+void hang(){
+  while(pot_liftValue > 112 || pot_liftValue < 110){
+    if(liftPos == 2) liftPos = 3;
+    Latch(t);
+    if(liftPos == 3) liftPos = 4;
+  }
+}
+
 int Lift() {         //move to specific position 
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos =139.5; break; //170
-      case 1: tarliftPos = 99; break; //platform 
-      case 2: tarliftPos = 72; break; //limit
+      case 0: tarliftPos = 139; break; //170 lowest
+      case 1: tarliftPos = 99; break; //scoring
+      case 2: tarliftPos = 72; break; //highest
       case 3: tarliftPos = 80; break; //before latch 
       case 4: tarliftPos = 111; break; //hang
+      case 5: tarliftPos = 130; break; //moving in auton
     }
 
-    double potDiff = tarliftPos - pot_liftValue;
-    // printf("potDiff :%.2f\n", potDiff);
-    // printf("tarliftPos :%.2f\n", tarliftPos);
-    // printf("pot_liftValue :%d\n", pot_liftValue);
-    // printf("\n");
-    double kP1 = 10;
-    double kP2 = 5;
-    //printf("lift val:%d\n", pot_liftValue);
+    potDiff = tarliftPos - pot_liftValue;
 
-    if(absD(potDiff) > potRange) {
-      lift(potDiff*kP1);
-      if(absD(potDiff) < 10){
-        lift(potDiff*kP2);
+    //pid for lift
+    if(abs(potDiff) > potRange) {
+      lift(potDiff*15);
+      if(abs(potDiff) < 10){
+        lift(potDiff*5);
       }
-
     }
     else {
       leftLift.stop(hold);
@@ -95,7 +96,3 @@ int Lift() {         //move to specific position
   }
   return(0);
 }
-
-//void Hang(bool s){
-  
-

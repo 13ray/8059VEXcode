@@ -52,8 +52,10 @@ void autonomous(void) {
   // ..........................................................................
   auton = t;
   resetCoords(0,0,0);
-  baseMove(24);
-  waitBase(2000);
+
+
+  // baseMove(24);
+  // waitBase(2000);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -71,25 +73,29 @@ void usercontrol(void) {
   int driveMode = 1;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
-  int count = 0; //, pcount = 0;
-  int by = 0, pby = 0;
-  bool twoBarTE = false; //twoBar toggle Enabled
-  bool latchTE = false; //latch toggle Enabled
-  bool L1Pressed = false; //flag
-  bool UPPressed = false;
-
-    
-  //int r1 = 0, r2 = 0, l1r1 = 0, l2r2 = 0, l1 = 0, ll2 = 0,  pr1 = 0, pr2 = 0, pl1r1 = 0, pl2r2 = 0, pl1 = 0, pll2 = 0;
+  bool twoBarTE = f, latchTE = f;
+  bool L1Pressed = f, UPPressed = f;
   
   // User control code here, inside the loop
   while (t) {
+    if(Controller1.ButtonA.pressing()) auton = t;
+    if(auton){
+      resetCoords(0,0,0);
+      baseTurn(90,0.84,0);
+      waitBase(5000);
+      auton=f;
+    }
+
+    if(Controller1.ButtonB.pressing()){
+      liftPos = 5;
+    }
+
     bool L1 = Controller1.ButtonL1.pressing();
     bool L2 = Controller1.ButtonL2.pressing();
     bool UP = Controller1.ButtonUp.pressing();
-    count += 1;
+
     //drivemode
-    if(Controller1.ButtonY.pressing()) by += 1;
-    if(by == pby && by!= 0) driveMode += 1, by = 0;
+    if(Controller1.ButtonY.pressing()) driveMode += 1, Controller1.Screen.clearLine(3);
     if(driveMode%3 == 1) { //reverse arcade
       LBSpeed = Controller1.Axis2.position() + Controller1.Axis4.position();
       RBSpeed = Controller1.Axis2.position() - Controller1.Axis4.position();
@@ -98,87 +104,76 @@ void usercontrol(void) {
     else if(driveMode%3 == 2) { //normal arcade
       LBSpeed = Controller1.Axis3.position() + Controller1.Axis1.position();
       RBSpeed = Controller1.Axis3.position() - Controller1.Axis1.position(); 
-      drivePrint = "Arcade  ";
+      drivePrint = "Arcade";
     }
     else { //tank
       LBSpeed = Controller1.Axis3.position();
       RBSpeed = Controller1.Axis2.position();
-      drivePrint = "Tank    ";
+      drivePrint = "Tank";
     }
 
     leftBase.spin(fwd, LBSpeed, pct);
     rightBase.spin(fwd, RBSpeed, pct);
     
-    /*button counts
-    if(Controller1.ButtonR2.pressing() && Controller1.ButtonL2.pressing()){l2r2 += 1;}
-    else if(Controller1.ButtonR2.pressing() && !Controller1.ButtonL2.pressing()) {r2 += 1;}
-    else if(Controller1.ButtonR1.pressing() && Controller1.ButtonL2.pressing()) {l1r1 += 1;} 
-    else if(Controller1.ButtonR1.pressing() && !Controller1.ButtonL2.pressing()) {r1 += 1;}
-    else if(Controller1.ButtonL1.pressing() && !Controller1.ButtonL2.pressing()) {l1 += 1;}
-    else if(Controller1.ButtonL1.pressing() && Controller1.ButtonL2.pressing()) {ll2 += 1;} */
-    
-
     //2 bar
     if(L1 && !L1Pressed){
       L1Pressed = t;
-      twoBarTE = !twoBarTE;
-      //twoBar(t);
-    }else if(!L1) L1Pressed = false;
-    
-    if(twoBarTE){
-      twoBar(t);
-    }else{
-      twoBar(f);
+      twoBarTE = !twoBarTE; //switch 2b state
     }
+    else if(!L1) {
+      L1Pressed = f;
+    }
+    twoBar(!twoBarTE); //actuate 2b state
 
     //frontMogo
     if(L2){
-      waitfrontMOG(1000,0);
-    }else{
-      frontMogo.close();
-    }
-
-    ///Latch
-    
-    if(UP && !UPPressed){
-      UPPressed = t;
-      latchTE = !latchTE;
-    }else if(!UP) UPPressed = false;
-
-    if(latchTE){
-      if(liftPos == 2){
-          liftPos += 1;
-        }
-        Latch(t);
-        if(liftPos == 3){
-          liftPos +=1;
-          }
-    }
-
-////Lift
-    if(Controller1.ButtonR1.pressing()){
-      if(liftPos < 2){
-        liftPos +=1;
-      }else if(liftPos == 2){
-        Controller1.rumble("-");
-      }}
-
-    if(Controller1.ButtonR2.pressing()){
-      if( liftPos > 0 && liftPos <= 2){
-        liftPos -= 1;
-      }else if(liftPos == 0){
-        Controller1.rumble("-");
-        //printf("curr angle: %d\n", pot_liftValue);
-        
+      if(liftPos == 0){
+        timerfrontMOG(1000); //open for 1 sec then close
+      }
+      else{
+        frontMOG(t);
       }
     }
+
+    //Latch
+    if(UP && !UPPressed){
+      UPPressed = t;
+      latchTE = !latchTE; //switch latch state
+    }
+    else if(!UP) UPPressed = false;
+
+    if(latchTE){ //actuate latch state
+      hang();
+    }
+
+    //Lift
+    if(Controller1.ButtonR1.pressing()){ //move up
+      if(liftPos < 2){
+        liftPos +=1;
+      }
+      else if(liftPos == 2){
+        Controller1.rumble("-");
+      }
+    }
+    if(Controller1.ButtonR2.pressing()){ //move down
+      if(liftPos > 0){
+        liftPos -= 1;
+        if(liftPos == 0){ //close front mogo when 
+          frontMOG(f);
+        }
+      }
+      else if(liftPos == 0){
+        Controller1.rumble("-");
+      }
+    }
+
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", twoBarL.value());
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("Lift Pos = %d, %d", liftPos, pot_liftValue);
+    Controller1.Screen.print("Lift Pos = %d", liftPos);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
-    //printf("pot_liftValue %d", pot_liftValue);
+    Controller1.Screen.clearLine(1);
 
   }
 }
@@ -190,7 +185,7 @@ int main() {
   task controlTask(Control);
   task sensorTask(Sensors);
   task odomTask(Odometry);
-  //task debugTask(Debug);
+  // task debugTask(Debug);
   task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.

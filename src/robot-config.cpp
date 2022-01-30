@@ -13,41 +13,36 @@ motor leftMid = motor(PORT3, ratio18_1, t);
 motor leftBack = motor(PORT4, ratio18_1, f);
 motor rightFront = motor(PORT20, ratio18_1, t);
 motor rightMid = motor(PORT8, ratio18_1, f);
-motor rightBack = motor(PORT7, ratio18_1, t);
+motor rightBack = motor(PORT6, ratio18_1, t);
 motor_group leftBase = motor_group(leftFront, leftMid, leftBack);
 motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
 motor leftLift = motor(PORT1, ratio36_1, f);
 motor rightLift = motor(PORT10,ratio36_1, t);
 
 
-vex::pneumatics twoBarL = vex::pneumatics(Brain.ThreeWirePort.A); 
-vex::pneumatics twoBarR = vex::pneumatics(Brain.ThreeWirePort.B); 
-vex::pneumatics frontMogo = vex::pneumatics(Brain.ThreeWirePort.H); 
-vex::pneumatics latch = vex::pneumatics(Brain.ThreeWirePort.G); 
-//digital_out twoBarL = digital_out(Brain.ThreeWirePort.A);
-// digital_out twoBarR = digital_out(Brain.ThreeWirePort.B);
-// digital_out frontMogo = digital_out(Brain.ThreeWirePort.H);
-// digital_out latch = digital_out(Brain.ThreeWirePort.G);
+pneumatics twoBarL = pneumatics(Brain.ThreeWirePort.A); 
+pneumatics twoBarR = pneumatics(Brain.ThreeWirePort.B); 
+pneumatics frontMogo = pneumatics(Brain.ThreeWirePort.H); 
+pneumatics latch = pneumatics(Brain.ThreeWirePort.G); 
 
-//digital_out backMogo = digital_out(Brain.ThreeWirePort.C);
-//digital_out liftAssistL = digital_out(Brain.ThreeWirePort.E);
-//digital_out liftAssistR = digital_out(Brain.ThreeWirePort.F);
-
-rotation rot_lb = rotation(PORT5, false);
-rotation rot_rb = rotation(PORT6, true);
+rotation rot_lb = rotation(PORT5, true);
+rotation rot_rb = rotation(PORT7, false);
 pot pot_lift = pot(Brain.ThreeWirePort.F);
-inertial imu = inertial(PORT20);
+inertial imu = inertial(PORT19);
 
 timer Timer;
 controller Controller1 = controller(primary);
 
 //initialise
 void vexcodeInit(){
-  imu.calibrate(5000);
+  imu.calibrate();
   if(imu.isCalibrating()) {wait(20, msec);}
-  frontMogo.set(f);//up
+  frontMOG(f);//up
   twoBar(f);//up
   Latch(f);//forward
   Controller1.Screen.clearScreen();
+
+  rot_lb.resetPosition();
+  rot_rb.resetPosition();
   resetCoords(0,0,0);
 }

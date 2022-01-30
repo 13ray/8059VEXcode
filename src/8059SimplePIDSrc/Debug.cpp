@@ -1,5 +1,5 @@
 #include "vex.h"
-int DEBUG_MODE = 6;
+int DEBUG_MODE = 7;
 
 void printPosMaster(){
   Controller1.Screen.setCursor(3, 0);
@@ -26,33 +26,19 @@ void printLiftEncdTerminal(){
 
 void printAllTerminal() {
   printf("x: %.2f y: %.2f bearing: %.2f\t", X, Y, bearing);
+  printf("encdL: %.2f encdR: %.2f\n", rot_lbValue, rot_rbValue);
   printf("errorEncdL: %.2f errorEncdR: %.2f\t", errorEncdL, errorEncdR);
   printf("targPowerL: %.2f, targPowerR: %.2f\t", targPowerL, targPowerR);
   printf("powerL: %.2f powerR: %.2f\t", powerL, powerR);
   printf("curr angle: %.2f\n", bearing);
-  printf("LiftencdL: %.2f LiftencdR: %.2f\n", liftEncdl, liftEncdr);
 }
 int Debug(){
-  while(true){
-    printPosMaster();
-    if(imu.isCalibrating()) {
-      printf("imu is calibrating...\n");
-      Brain.Screen.setCursor(1,1);
-      Brain.Screen.print("Calibrating IMU");
-    }else {
-      Brain.Screen.clearScreen();
-      switch(DEBUG_MODE){
-        case 1: printPosTerminal(); break;
-        case 2: printEncdTerminal(); break;
-        case 3: printErrorTerminal(); break;
-        case 4: printTargPowerTerminal(); break;
-        case 5: printPowerTerminal(); break;
-        case 6: printLiftEncdTerminal(); break;
-        case 7: printAllTerminal(); break;
-      }
-    //}
-    wait(50, msec);
+  while(t){
+    printf("x: %.2f y: %.2f bearing: %.2f\t", X, Y, bearing);
+    printf("encdL: %.2f encdR: %.2f\t", rot_lbValue, rot_rbValue);
+    printf("errorBearing: %.2f targBearing: %.2f\t", errorBearing, targBearing);
+    printf("curr angle: %.2f\n", bearing);
+    wait(20, msec);
   }
   return 0;
-}
 }
