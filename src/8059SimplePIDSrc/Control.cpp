@@ -9,6 +9,7 @@ double FMG_TURN_KP = 1.05, FMG_TURN_KD = 0.7; //1 mogo front right
 double FMGS_TURN_KP = 1.3, FMGS_TURN_KD = 0; //2 mogos in front
 double BMG_TURN_KP = 0.75, BMG_TURN_KD = 0; //back mogo only 
 double BMGFR_TURN_KP = 0.74, BMGFR_TURN_KD = 0.2; //back mogo and front right
+double BMGFL_TURN_KP = 0.84, BMGFL_TURN_KD = 0; //back mogo and front left
 double MGS_TURN_KP = 1.1, MGS_TURN_KD = 0; //all 3 mogos
 
 #define RAMPING_POW 1
