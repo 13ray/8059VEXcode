@@ -10,9 +10,11 @@ void lift(int s, int t);
 void liftRot(int rot);
 void twoBar(bool s);
 void frontMOG(bool s);
+void waitfrontMOG(int t, int waitForCompetition);
 void Latch(bool s);
 //void Hang(bool s);
 
 int Lift();
+
 
 #endif
