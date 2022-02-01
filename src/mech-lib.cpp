@@ -2,7 +2,7 @@
 
 //values or thresholds
 int liftPos = 0, prevliftPos = 0;
-int tarliftPos = 139, potRange = 2, potDiff = 0;
+int tarliftPos = 139, potRange = 1, potDiff = 0;
 
 bool f = false, t = true;
 
@@ -44,16 +44,9 @@ void frontMOG(bool s){
   }
 }
 
-//open front mogo for set time then close
-void timerfrontMOG(int t){
-  frontMogo.open();
-  wait(t,msec);
-  frontMogo.close();
-}
-
 //Latch pistons true = open = backwards
 void Latch(bool s){
-  if(s==t){
+  if(s){
     latch.open();
   }else{
     latch.close();

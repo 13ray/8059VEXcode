@@ -9,7 +9,6 @@ void lift(int s, int t);
 void liftRot(int rot);
 void twoBar(bool s);
 void frontMOG(bool s);
-void timerfrontMOG(int t);
 void Latch(bool s);
 void hang();
 

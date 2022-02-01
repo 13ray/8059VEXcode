@@ -70,14 +70,16 @@ void autonomous(void) {
 
 void usercontrol(void) {
   auton = f;
-  int driveMode = 1;
+  int driveMode = 1, count = 0, pcount = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
   bool twoBarTE = f, latchTE = f;
   bool L1Pressed = f, UPPressed = f;
+  bool L1 = f, L2 = f, UP = f;
   
   // User control code here, inside the loop
   while (t) {
+    /*
     if(Controller1.ButtonA.pressing()) auton = t;
     if(auton){
       resetCoords(0,0,0);
@@ -88,11 +90,12 @@ void usercontrol(void) {
 
     if(Controller1.ButtonB.pressing()){
       liftPos = 5;
-    }
+    }*/
 
-    bool L1 = Controller1.ButtonL1.pressing();
-    bool L2 = Controller1.ButtonL2.pressing();
-    bool UP = Controller1.ButtonUp.pressing();
+    L1 = Controller1.ButtonL1.pressing();
+    L2 = Controller1.ButtonL2.pressing();
+    UP = Controller1.ButtonUp.pressing();
+    count += 1;
 
     //drivemode
     if(Controller1.ButtonY.pressing()) driveMode += 1, Controller1.Screen.clearLine(3);
@@ -128,12 +131,11 @@ void usercontrol(void) {
     //frontMogo
     if(L2){
       if(liftPos == 0){
-        timerfrontMOG(1000); //open for 1 sec then close
+        pcount = count;
       }
-      else{
-        frontMOG(t);
-      }
+      frontMOG(t); //open
     }
+    if((count-pcount) == 10 && pcount != 0) frontMOG(f); //close after controller loop runs 10 times
 
     //Latch
     if(UP && !UPPressed){
@@ -174,7 +176,6 @@ void usercontrol(void) {
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
     Controller1.Screen.clearLine(1);
-
   }
 }
 
@@ -182,7 +183,7 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-  task controlTask(Control);
+  // task controlTask(Control);
   task sensorTask(Sensors);
   task odomTask(Odometry);
   // task debugTask(Debug);
