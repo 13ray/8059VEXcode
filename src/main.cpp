@@ -167,7 +167,7 @@ void usercontrol(void) {
       else if(liftPos == 0){
         Controller1.rumble("-");
       }
-    }
+    } 
 
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", twoBarL.value());
