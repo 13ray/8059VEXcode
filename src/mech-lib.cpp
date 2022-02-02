@@ -2,7 +2,7 @@
 
 //values or thresholds
 int liftPos = 0, prevliftPos = 0;
-int tarliftPos = 139, potRange = 1, potDiff = 0;
+int tarliftPos = 88, potRange = 1, potDiff = 0;
 
 bool f = false, t = true;
 
@@ -65,21 +65,21 @@ void hang(){
 int Lift() {         //move to specific position 
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos = 139; break; //170 lowest
-      case 1: tarliftPos = 99; break; //scoring
-      case 2: tarliftPos = 72; break; //highest
-      case 3: tarliftPos = 80; break; //before latch 
-      case 4: tarliftPos = 111; break; //hang
-      case 5: tarliftPos = 130; break; //moving in auton
+      case 0: tarliftPos = 88; break; //139 lowest
+      case 1: tarliftPos = 128; break; //99 scoring
+      case 2: tarliftPos = 160; break; //72 highest
+      case 3: tarliftPos = 146; break; //80 before latch 
+      case 4: tarliftPos = 118; break; //111 hang
+      case 5: tarliftPos = 139; break; //130 moving in auton
     }
 
     potDiff = tarliftPos - pot_liftValue;
 
     //pid for lift
     if(abs(potDiff) > potRange) {
-      lift(potDiff*15);
-      if(abs(potDiff) < 10){
-        lift(potDiff*5);
+      lift(potDiff*-15);
+      if(abs(potDiff) < -10){
+        lift(potDiff*-5);
       }
     }
     else {

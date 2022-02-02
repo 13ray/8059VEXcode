@@ -173,6 +173,7 @@ void usercontrol(void) {
     Controller1.Screen.print("Two Bar = %d", twoBarL.value());
     Controller1.Screen.setCursor(2, 1);
     Controller1.Screen.print("Lift Pos = %d", liftPos);
+    Controller1.Screen.print("  %d", pot_liftValue);
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
     Controller1.Screen.clearLine(1);
