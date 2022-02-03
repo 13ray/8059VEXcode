@@ -70,7 +70,7 @@ int Lift() {         //move to specific position
       case 2: tarliftPos = 160; break; //72 highest
       case 3: tarliftPos = 146; break; //80 before latch 
       case 4: tarliftPos = 118; break; //111 hang
-      case 5: tarliftPos = 139; break; //130 moving in auton
+      case 5: tarliftPos = 97; break; //130 moving in auton
     }
 
     potDiff = tarliftPos - pot_liftValue;

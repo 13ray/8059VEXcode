@@ -79,18 +79,18 @@ void usercontrol(void) {
   
   // User control code here, inside the loop
   while (t) {
-    /*
-    if(Controller1.ButtonA.pressing()) auton = t;
-    if(auton){
-      resetCoords(0,0,0);
-      baseTurn(90,0.84,0);
-      waitBase(5000);
-      auton=f;
-    }
+    
+    // if(Controller1.ButtonA.pressing()) auton = t;
+    // if(auton){
+    //   resetCoords(0,0,0);
+    //   baseTurn(90,BMGFR_TURN_KP,BMGFR_TURN_KD);
+    //   waitBase(5000);
+    //   auton=f;
+    // }
 
-    if(Controller1.ButtonB.pressing()){
-      liftPos = 5;
-    }*/
+    // if(Controller1.ButtonB.pressing()){
+    //   liftPos = 5;
+    // }
 
     L1 = Controller1.ButtonL1.pressing();
     L2 = Controller1.ButtonL2.pressing();
@@ -150,6 +150,7 @@ void usercontrol(void) {
 
     //Lift
     if(Controller1.ButtonR1.pressing()){ //move up
+      Controller1.Screen.clearLine(2);
       if(liftPos < 2){
         liftPos +=1;
       }
@@ -158,6 +159,7 @@ void usercontrol(void) {
       }
     }
     if(Controller1.ButtonR2.pressing()){ //move down
+      Controller1.Screen.clearLine(2);
       if(liftPos > 0){
         liftPos -= 1;
         if(liftPos == 0){ //close front mogo when 

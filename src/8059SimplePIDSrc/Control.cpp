@@ -1,16 +1,16 @@
 #include "vex.h"
 
-double DEFAULT_KP = 0.15, DEFAULT_KD = 1.2; //no mogos on robot
+double DEFAULT_KP = 0.163, DEFAULT_KD = 5.5; //no mogos on robot
 double FMG_KP = 0.14, FMG_KD = 1.5; //1 mogo in front
 double FMGS_KP = 0.13, FMGS_KD = 3; //2 mogos in front
 double BMG_KP = 0.14, BMG_KD = 0.5; //back mogo only / back mogo and 1 front
 double MGS_KP = 0.13, MGS_KD = 0.3;//all 3 mogos
-double FMG_TURN_KP = 1.05, FMG_TURN_KD = 0.7; //1 mogo front right 
+double FMG_TURN_KP = 1.1, FMG_TURN_KD = 0.1; //1 mogo front right 
 double FMGS_TURN_KP = 1.3, FMGS_TURN_KD = 0; //2 mogos in front
 double BMG_TURN_KP = 0.75, BMG_TURN_KD = 0; //back mogo only 
-double BMGFR_TURN_KP = 0.74, BMGFR_TURN_KD = 0.2; //back mogo and front right
-double BMGFL_TURN_KP = 0.84, BMGFL_TURN_KD = 0; //back mogo and front left
-double MGS_TURN_KP = 1.1, MGS_TURN_KD = 0; //all 3 mogos
+double BMGFR_TURN_KP = 0.74, BMGFR_TURN_KD = 0.4; //back mogo and front right
+double BMGFL_TURN_KP = 0.84, BMGFL_TURN_KD = 0.7; //back mogo and front left
+double MGS_TURN_KP = 0.8, MGS_TURN_KD = 0.5; //all 3 mogos
 
 #define RAMPING_POW 1
 #define DISTANCE_LEEWAY 15
