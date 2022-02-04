@@ -82,6 +82,9 @@ void waitBase(double cutoff){
     while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
   }
   printf("time taken, %.f \n", start);
+  targBearing = bearing;
+  targEncdL = rot_lbValue;
+  targEncdR = rot_rbValue;
 }
 
 int Control(){

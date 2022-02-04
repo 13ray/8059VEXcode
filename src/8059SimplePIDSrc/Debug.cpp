@@ -34,10 +34,8 @@ void printAllTerminal() {
 }
 int Debug(){
   while(t){
-    printf("x: %.2f y: %.2f bearing: %.2f\t", X, Y, bearing);
-    printf("encdL: %.2f encdR: %.2f\t", rot_lbValue, rot_rbValue);
-    printf("errorBearing: %.2f targBearing: %.2f\t", errorBearing, targBearing);
-    printf("curr angle: %.2f\n", bearing);
+    printf("x: %.2f y: %.2f bearing: %.2f\n", X, Y, bearing);
+    printf("errorBearing: %.2f targBearing: %.2f\n", errorBearing, targBearing);
     wait(20, msec);
   }
   return 0;

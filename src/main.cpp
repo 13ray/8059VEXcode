@@ -73,6 +73,7 @@ void usercontrol(void) {
   int driveMode = 1, count = 0, pcount = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
+  int liftStart = 0;
   bool twoBarTE = f, latchTE = f;
   bool L1Pressed = f, UPPressed = f;
   bool L1 = f, L2 = f, UP = f;
@@ -83,13 +84,30 @@ void usercontrol(void) {
     // if(Controller1.ButtonA.pressing()) auton = t;
     // if(auton){
     //   resetCoords(0,0,0);
-    //   baseTurn(90,BMGFR_TURN_KP,BMGFR_TURN_KD);
-    //   waitBase(5000);
-    //   auton=f;
-    // }
+    //   liftPos = 0;
 
-    // if(Controller1.ButtonB.pressing()){
-    //   liftPos = 5;
+    //   //right red
+    //   baseMove(5, DEFAULT_KP, DEFAULT_KD); //intake mogo
+    //   waitBase(1000);
+
+    // baseMove(-5, DEFAULT_KP, DEFAULT_KD); //reverse
+    // waitBase(2000);
+
+    // task liftTask(Lift);
+    // liftPos = 5;
+    // waitLift();
+
+    //   //left neutral
+    //   baseTurn(315, FMG_TURN_KP, FMG_TURN_KD); //face mogo
+    //   waitBase(5000);
+      
+    //   baseMove(40, FMG_KP, FMG_KD); //go to mogo
+    //   waitBase(10000);
+
+    //   liftPos = 0;
+    //   baseMove(8, FMG_KP, FMG_KD); //intake mogo
+    //   waitBase(5000);
+    //   auton = f;
     // }
 
     L1 = Controller1.ButtonL1.pressing();
@@ -135,7 +153,7 @@ void usercontrol(void) {
       }
       frontMOG(t); //open
     }
-    if((count-pcount) == 10 && pcount != 0) frontMOG(f); //close after controller loop runs 10 times
+    if((count-pcount) == 8 && pcount != 0) frontMOG(f); //close after controller loop runs 10 times
 
     //Latch
     if(UP && !UPPressed){
@@ -150,6 +168,7 @@ void usercontrol(void) {
 
     //Lift
     if(Controller1.ButtonR1.pressing()){ //move up
+      liftStart += 1;
       Controller1.Screen.clearLine(2);
       if(liftPos < 2){
         liftPos +=1;
@@ -171,6 +190,10 @@ void usercontrol(void) {
       }
     } 
 
+    if(liftStart == 1){
+      task liftTask(Lift);
+    }
+
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", twoBarL.value());
     Controller1.Screen.setCursor(2, 1);
@@ -190,7 +213,7 @@ int main() {
   task sensorTask(Sensors);
   task odomTask(Odometry);
   // task debugTask(Debug);
-  task liftTask(Lift);
+  // task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
