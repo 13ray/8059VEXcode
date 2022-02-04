@@ -98,6 +98,8 @@ int Lift() {         //move to specific position
       leftLift.stop(hold);
       rightLift.stop(hold);
     }
+    // printf("pot Diff: %d\n", potDiff);
+    // printf("speed: %.2f\n", leftLift.velocity(pct));
     wait(5, msec);
   }
   return(0);
