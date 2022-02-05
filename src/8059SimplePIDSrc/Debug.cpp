@@ -36,8 +36,8 @@ int Debug(){
   while(t){
     printf("x: %.2f y: %.2f bearing: %.2f\n", X, Y, bearing);
     printf("errorBearing: %.2f targBearing: %.2f\n", errorBearing, targBearing);
-    printf("errorEncdL: %.2f errorEncdR: %.2f\t", errorEncdL, errorEncdR);
-    wait(20, msec);
+    printf("errorEncdL: %.2f errorEncdR: %.2f\n", errorEncdL, errorEncdR);
+    wait(100, msec);
   }
   return 0;
 }

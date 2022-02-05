@@ -70,13 +70,12 @@ void autonomous(void) {
 
 void usercontrol(void) {
   auton = f;
+  bool auton2 = f;
   int driveMode = 1, count = 0, pcount = 0;
   std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
   int liftStart = 0;
-  bool twoBarTE = f, latchTE = f;
-  bool L1Pressed = f, UPPressed = f;
-  bool L1 = f, L2 = f, UP = f;
+  bool L1Pressed = f, R1Pressed = f, R2Pressed = f, L2Pressed = f, UPPressed = f, twoBarTE = f;
   
   // User control code here, inside the loop
   while (t) {
@@ -86,46 +85,111 @@ void usercontrol(void) {
       // baseTurn(30,FMGS_TURN_KP,FMGS_TURN_KD);
       
       resetCoords(0,0,0);
-      liftPos = 0;
 
-      //right red
-      baseMove(4, DEFAULT_KP, DEFAULT_KD); //intake mogo
-      waitBase(1000);
+      //right red mogo
+      baseMove(4, DEFAULT_KP, DEFAULT_KD); //intake right red
+      waitBase(800);
 
       baseMove(-11, DEFAULT_KP, DEFAULT_KD); //reverse
-      waitBase(1500);
+      waitBase(800);
 
       task liftTask(Lift);
       liftPos = 5;
       waitLift();
 
-      //left neutral
-      baseTurn(304, FMG_TURN_KP, FMG_TURN_KD); //face mogo
-      waitBase(5000);
+      //right neutral mogo
+      baseTurn(305.5, FMG_TURN_KP, FMG_TURN_KD); //face mogo
+      waitBase(3000);
       
       baseMove(36, FMG_KP, FMG_KD); //go to mogo
-      waitBase(9000);
+      waitBase(8000);
 
       liftPos = 0;
-      baseMove(12.8, FMG_KP, FMG_KD); //intake mogo
-      waitBase(3000);
+      waitLift();
+      baseMove(14.7, FMG_KP-0.03, FMG_KD); //intake right neutral
+      waitBase(4000);
       resetRot();
 
       //clearing rings
       liftPos = 2;
-      baseMove(31,FMGS_KP, FMGS_KD);
+      baseMove(35,FMGS_KP, FMGS_KD);
       waitBase(9000);
       resetRot();
+      wait(500, msec);
 
-      baseTurn(18, FMGS_TURN_KP, FMGS_TURN_KD);
+      baseTurn(12, FMGS_TURN_KP, FMGS_TURN_KD); //face rings
+      waitBase(3000);
+
+      baseMove(30, FMGS_KP, FMGS_KD); //clear rings
+      waitBase(4500);
+      wait(500, msec);
+
+      //scoring neutral and red mogos
+      baseMove(-14.7, FMGS_KP, FMGS_KD);
+      waitBase(7800);
+
+      baseTurn(286, FMGS_TURN_KP, FMGS_TURN_KD); //face platform
+      waitBase(4300);
+
+      baseMove(20.5, FMGS_KP-0.05, 0); //go into platform
+      waitBase(3000);
+      
+      liftPos = 1;
+      waitLift();
+      frontMOG(t); //score
+      wait(200, msec);
+
+      //tall neutral
+      liftPos = 2;
+      waitLift();
+      
+      timerBase(30, 30, 500); //align against platform
+      timerBase(19, 18, 250);
+      resetRot();
+
+      baseMove(-43.5, DEFAULT_KP-0.06, 0); //intake tall neutral
+      waitBase(20000);
+      liftPos = 0;
+      twoBar(t);
+      frontMOG(f);
+      wait(100, msec);
+
+      //left neutral mogo
+      baseTurn(8, BMG_TURN_KP, BMG_TURN_KD); //face mogo
+      waitBase(6000);
+
+      baseMove(21, BMG_KP, BMG_KD); //intake left neutral 
+      waitBase(10000);
+
+      wait(100, msec);
+      liftPos = 5;
+      waitLift();
+
+      //left red mogo
+      baseTurn(105, BMGFR_TURN_KP, BMGFR_TURN_KD); //face platform
       waitBase(5000);
-      auton = f;
-    }*/
 
-    L1 = Controller1.ButtonL1.pressing();
-    L2 = Controller1.ButtonL2.pressing();
-    UP = Controller1.ButtonUp.pressing();
+      baseMove(30, BMG_KP, BMG_KD);
+      waitBase(10000);
+
+      baseTurn(20, BMGFR_TURN_KP, BMGFR_TURN_KD); //face mogo
+      waitBase(5000);
+
+      auton = f;
+    }
     count += 1;
+
+    if(Controller1.ButtonB.pressing()){
+      auton2 = t;
+
+    }
+    if(auton2){
+      twoBar(f);
+      wait(200, msec);
+      twoBar(t);
+      
+      auton2 = f;
+    }*/
 
     //drivemode
     if(Controller1.ButtonY.pressing()) driveMode += 1, Controller1.Screen.clearLine(3);
@@ -149,37 +213,38 @@ void usercontrol(void) {
     rightBase.spin(fwd, RBSpeed, pct);
     
     //2 bar
-    if(L1 && !L1Pressed){
+    if(Controller1.ButtonL1.pressing() && !L1Pressed){
       L1Pressed = t;
       twoBarTE = !twoBarTE; //switch 2b state
     }
-    else if(!L1) {
+    else if(!Controller1.ButtonL1.pressing()) {
       L1Pressed = f;
     }
-    twoBar(!twoBarTE); //actuate 2b state
+    twoBar(twoBarTE); //actuate 2b*/
 
     //frontMogo
-    if(L2){
+    if(Controller1.ButtonL2.pressing() && !L2Pressed){
+      L2Pressed = t;
       if(liftPos == 0){
         pcount = count;
       }
       frontMOG(t); //open
     }
+    else{
+      L2Pressed = f;
+    }
     if((count-pcount) == 6 && pcount != 0) frontMOG(f); //close after controller loop runs 6 times
 
     //Latch
-    if(UP && !UPPressed){
+    if(Controller1.ButtonUp.pressing() && !UPPressed){
       UPPressed = t;
-      latchTE = !latchTE; //switch latch state
-    }
-    else if(!UP) UPPressed = false;
-
-    if(latchTE){ //actuate latch state
       hang();
     }
+    else if(!Controller1.ButtonUp.pressing()) UPPressed = false;
 
     //Lift
-    if(Controller1.ButtonR1.pressing()){ //move up
+    if(Controller1.ButtonR1.pressing() && !R1Pressed){ //move up
+      R1Pressed = t;
       liftStart += 1;
       Controller1.Screen.clearLine(2);
       if(liftPos < 2){
@@ -189,7 +254,11 @@ void usercontrol(void) {
         Controller1.rumble("-");
       }
     }
-    if(Controller1.ButtonR2.pressing()){ //move down
+    else{
+      R1Pressed = f;
+    }
+    if(Controller1.ButtonR2.pressing() && !R2Pressed){ //move down
+      R2Pressed = t;
       Controller1.Screen.clearLine(2);
       if(liftPos > 0){
         liftPos -= 1;
@@ -201,6 +270,9 @@ void usercontrol(void) {
         Controller1.rumble("-");
       }
     } 
+    else{
+      R2Pressed = f;
+    }
 
     if(liftStart == 1){
       task liftTask(Lift);
@@ -212,7 +284,6 @@ void usercontrol(void) {
     Controller1.Screen.print("Lift Pos = %d, %d", liftPos, imu.isCalibrating());
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
-    Controller1.Screen.clearLine(1);
   }
 }
 
@@ -222,7 +293,7 @@ void usercontrol(void) {
 int main() {
   // task controlTask(Control);
   task sensorTask(Sensors);
-  task odomTask(Odometry);
+  // task odomTask(Odometry);
   // task debugTask(Debug);
   // task liftTask(Lift);
 

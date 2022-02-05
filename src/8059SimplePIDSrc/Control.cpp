@@ -6,9 +6,9 @@ double FMGS_KP = 0.13, FMGS_KD = 3; //2 mogos in front
 double BMG_KP = 0.14, BMG_KD = 0.5; //back mogo only / back mogo and 1 front
 double MGS_KP = 0.13, MGS_KD = 0.3;//all 3 mogos
 double FMG_TURN_KP = 1.1, FMG_TURN_KD = 0.2; //1 mogo front right 
-double FMGS_TURN_KP = 1.2, FMGS_TURN_KD = 0.5; //2 mogos in front
+double FMGS_TURN_KP = 1.12, FMGS_TURN_KD = 1.2; //2 mogos in front
 double BMG_TURN_KP = 0.75, BMG_TURN_KD = 0; //back mogo only 
-double BMGFR_TURN_KP = 0.74, BMGFR_TURN_KD = 0.4; //back mogo and front right
+double BMGFR_TURN_KP = 0.76, BMGFR_TURN_KD = 0; //back mogo and front right
 double BMGFL_TURN_KP = 0.84, BMGFL_TURN_KD = 0.7; //back mogo and front left
 double MGS_TURN_KP = 0.8, MGS_TURN_KD = 0.5; //all 3 mogos
 
@@ -81,7 +81,7 @@ void waitBase(double cutoff){
   }else{
     while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
   }
-  printf("time taken, %.f \n", start);
+  printf("time taken, %.f \n\n", start);
   targBearing = bearing;
   targEncdL = rot_lbValue;
   targEncdR = rot_rbValue;
@@ -93,7 +93,15 @@ int Control(){
     if(!imu.isCalibrating() && !pauseBase) {
       if(turnMode) {
         errorBearing = targBearing - bearing;
-        if(absD(errorBearing) > 180) errorBearing = -(errorBearing-180);
+        if(errorBearing > 180){
+          if(targBearing < bearing) errorBearing = 360 - targBearing + bearing;
+          else errorBearing = -(360-targBearing + bearing);
+        }
+        else if(errorBearing < -180){
+          if(targBearing < bearing) errorBearing = 360 - bearing + targBearing;
+          else errorBearing = -(360 - bearing + targBearing);
+          }
+          
         double deltaErrorBearing = errorBearing - prevErrorBearing;
 
         targPowerL = errorBearing * kP + deltaErrorBearing * kD;

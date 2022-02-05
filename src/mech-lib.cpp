@@ -25,18 +25,18 @@ void liftRot(int rot){
   rightLift.rotateTo(rot, deg);
 }
 
-//two bar pistons: true = down
+//two bar pistons: false = down
 void twoBar(bool s) {
   if(s){
-    twoBarL.set(f);
-    twoBarR.set(f);
-  }else{
     twoBarL.set(t);
-    twoBarR.set(t);    
+    twoBarR.set(t);
+  }else{
+    twoBarL.set(f);
+    twoBarR.set(f);    
   }
 }
 
-//front mogo
+//front mogo: true = release
 void frontMOG(bool s){
   if(s){
     frontMogo.set(f);
@@ -56,8 +56,9 @@ void hang(){
 
 //wait for lift to finish moving
 void waitLift(){
-  while(lifting){
-  wait(5, msec);
+  while(t){
+    wait(10, msec);
+    if(!lifting) break;
   }
 }
 
