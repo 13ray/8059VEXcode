@@ -25,23 +25,23 @@ void liftRot(int rot){
   rightLift.rotateTo(rot, deg);
 }
 
-//two bar pistons: true = open
+//two bar pistons: true = down
 void twoBar(bool s) {
   if(s){
-    twoBarL.open();
-    twoBarR.open();
-  }else{
     twoBarL.close();
-    twoBarR.close();    
+    twoBarR.close();
+  }else{
+    twoBarL.open();
+    twoBarR.open();    
   }
 }
 
 //front mogo
 void frontMOG(bool s){
   if(s){
-    frontMogo.open();
-  }else{
     frontMogo.close();
+  }else{
+    frontMogo.open();
   }
 }
 

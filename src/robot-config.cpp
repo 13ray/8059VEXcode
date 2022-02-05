@@ -37,8 +37,8 @@ controller Controller1 = controller(primary);
 void vexcodeInit(){
   imu.calibrate();
   if(imu.isCalibrating()) {wait(20, msec);}
-  frontMOG(f);//up
-  twoBar(f);//up
+  frontMOG(t);//up
+  twoBar(t);//up
   Latch(f);//forward
   Controller1.Screen.clearScreen();
 
