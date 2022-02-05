@@ -14,5 +14,6 @@ void unPauseBase();
 void waitBase(double cutoff);
 extern int Control();
 void resetCoords(double x, double y, double bearing);
+void resetRot();
 
 #endif

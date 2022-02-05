@@ -5,8 +5,8 @@ double FMG_KP = 0.14, FMG_KD = 1.5; //1 mogo in front
 double FMGS_KP = 0.13, FMGS_KD = 3; //2 mogos in front
 double BMG_KP = 0.14, BMG_KD = 0.5; //back mogo only / back mogo and 1 front
 double MGS_KP = 0.13, MGS_KD = 0.3;//all 3 mogos
-double FMG_TURN_KP = 1.1, FMG_TURN_KD = 0.1; //1 mogo front right 
-double FMGS_TURN_KP = 1.3, FMGS_TURN_KD = 0; //2 mogos in front
+double FMG_TURN_KP = 1.1, FMG_TURN_KD = 0.2; //1 mogo front right 
+double FMGS_TURN_KP = 1.2, FMGS_TURN_KD = 0.5; //2 mogos in front
 double BMG_TURN_KP = 0.75, BMG_TURN_KD = 0; //back mogo only 
 double BMGFR_TURN_KP = 0.74, BMGFR_TURN_KD = 0.4; //back mogo and front right
 double BMGFL_TURN_KP = 0.84, BMGFL_TURN_KD = 0.7; //back mogo and front left
@@ -128,6 +128,18 @@ int Control(){
     wait(5, msec);
   }
   return 0;
+}
+
+void resetRot(){
+  rot_lb.resetPosition();
+  rot_rb.resetPosition();
+  targEncdL = 0;
+  targEncdR = 0;
+  errorEncdL = 0;
+  errorEncdR = 0;
+  resetPrevEncd();
+
+  wait(100, msec);
 }
 
 void resetCoords(double x, double y, double angleInDeg){

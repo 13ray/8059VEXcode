@@ -81,34 +81,46 @@ void usercontrol(void) {
   // User control code here, inside the loop
   while (t) {
     
-    // if(Controller1.ButtonA.pressing()) auton = t;
-    // if(auton){
-    //   resetCoords(0,0,0);
-    //   liftPos = 0;
-
-    //   //right red
-    //   baseMove(5, DEFAULT_KP, DEFAULT_KD); //intake mogo
-    //   waitBase(1000);
-
-    // baseMove(-5, DEFAULT_KP, DEFAULT_KD); //reverse
-    // waitBase(2000);
-
-    // task liftTask(Lift);
-    // liftPos = 5;
-    // waitLift();
-
-    //   //left neutral
-    //   baseTurn(315, FMG_TURN_KP, FMG_TURN_KD); //face mogo
-    //   waitBase(5000);
+    /*if(Controller1.ButtonA.pressing()) auton = t;
+    if(auton){
+      // baseTurn(30,FMGS_TURN_KP,FMGS_TURN_KD);
       
-    //   baseMove(40, FMG_KP, FMG_KD); //go to mogo
-    //   waitBase(10000);
+      resetCoords(0,0,0);
+      liftPos = 0;
 
-    //   liftPos = 0;
-    //   baseMove(8, FMG_KP, FMG_KD); //intake mogo
-    //   waitBase(5000);
-    //   auton = f;
-    // }
+      //right red
+      baseMove(4, DEFAULT_KP, DEFAULT_KD); //intake mogo
+      waitBase(1000);
+
+      baseMove(-11, DEFAULT_KP, DEFAULT_KD); //reverse
+      waitBase(1500);
+
+      task liftTask(Lift);
+      liftPos = 5;
+      waitLift();
+
+      //left neutral
+      baseTurn(304, FMG_TURN_KP, FMG_TURN_KD); //face mogo
+      waitBase(5000);
+      
+      baseMove(36, FMG_KP, FMG_KD); //go to mogo
+      waitBase(9000);
+
+      liftPos = 0;
+      baseMove(12.8, FMG_KP, FMG_KD); //intake mogo
+      waitBase(3000);
+      resetRot();
+
+      //clearing rings
+      liftPos = 2;
+      baseMove(31,FMGS_KP, FMGS_KD);
+      waitBase(9000);
+      resetRot();
+
+      baseTurn(18, FMGS_TURN_KP, FMGS_TURN_KD);
+      waitBase(5000);
+      auton = f;
+    }*/
 
     L1 = Controller1.ButtonL1.pressing();
     L2 = Controller1.ButtonL2.pressing();
@@ -197,8 +209,7 @@ void usercontrol(void) {
     Controller1.Screen.setCursor(1,1);
     Controller1.Screen.print("Two Bar = %d", twoBarL.value());
     Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("Lift Pos = %d", liftPos);
-    Controller1.Screen.print("  %d", pot_liftValue);
+    Controller1.Screen.print("Lift Pos = %d, %d", liftPos, imu.isCalibrating());
     Controller1.Screen.setCursor(3, 1);
     Controller1.Screen.print(drivePrint.c_str());
     Controller1.Screen.clearLine(1);

@@ -2,7 +2,7 @@
 
 //values or thresholds
 int liftPos = 0, prevliftPos = 0;
-int tarliftPos = 86, potRange = 1, potDiff = 0;
+int tarliftPos = 87, potRange = 1, potDiff = 0;
 bool lifting = f;
 
 bool f = false, t = true;
@@ -73,7 +73,7 @@ void waitLift(){
 int Lift() {         //move to specific position 
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos = 86; break; //139 lowest
+      case 0: tarliftPos = 87; break; //139 lowest
       case 1: tarliftPos = 128; break; //99 scoring
       case 2: tarliftPos = 160; break; //72 highest
       case 3: tarliftPos = 146; break; //80 before latch 
