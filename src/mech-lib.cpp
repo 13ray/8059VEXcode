@@ -45,20 +45,11 @@ void frontMOG(bool s){
   }
 }
 
-//Latch pistons true = open = backwards
-void Latch(bool s){
-  if(s){
-    latch.open();
-  }else{
-    latch.close();
-  }
-}
-
 //hanging process
 void hang(){
-  while(pot_liftValue > 112 || pot_liftValue < 110){
+  while(pot_liftValue > 117 || pot_liftValue < 115){
     if(liftPos == 2) liftPos = 3;
-    Latch(t);
+    latch.set(t);
     if(liftPos == 3) liftPos = 4;
   }
 }
@@ -77,7 +68,7 @@ int Lift() {         //move to specific position
       case 1: tarliftPos = 128; break; //99 scoring
       case 2: tarliftPos = 160; break; //72 highest
       case 3: tarliftPos = 146; break; //80 before latch 
-      case 4: tarliftPos = 118; break; //111 hang
+      case 4: tarliftPos = 116; break; //111 hang
       case 5: tarliftPos = 100; break; //130 moving in auton
     }
 

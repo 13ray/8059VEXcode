@@ -165,7 +165,7 @@ void usercontrol(void) {
       }
       frontMOG(t); //open
     }
-    if((count-pcount) == 6 && pcount != 0) frontMOG(f); //close after controller loop runs 10 times
+    if((count-pcount) == 6 && pcount != 0) frontMOG(f); //close after controller loop runs 6 times
 
     //Latch
     if(UP && !UPPressed){
@@ -220,7 +220,7 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-  task controlTask(Control);
+  // task controlTask(Control);
   task sensorTask(Sensors);
   task odomTask(Odometry);
   // task debugTask(Debug);

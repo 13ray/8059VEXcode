@@ -18,7 +18,7 @@ extern motor rightLift;
 extern digital_out twoBarL;
 extern digital_out twoBarR;
 extern digital_out frontMogo;
-extern pneumatics latch;
+extern digital_out latch;
 //extern digital_out backMogo;
 //extern digital_out liftAssistL;
 // extern digital_out liftAssistR;

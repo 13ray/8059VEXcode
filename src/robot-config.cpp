@@ -23,7 +23,7 @@ motor rightLift = motor(PORT10,ratio36_1, t);
 digital_out twoBarL = digital_out(Brain.ThreeWirePort.A); 
 digital_out twoBarR = digital_out(Brain.ThreeWirePort.B); 
 digital_out frontMogo = digital_out(Brain.ThreeWirePort.H); 
-pneumatics latch = pneumatics(Brain.ThreeWirePort.G); 
+digital_out latch = digital_out(Brain.ThreeWirePort.G); 
 
 rotation rot_lb = rotation(PORT5, true);
 rotation rot_rb = rotation(PORT7, false);
