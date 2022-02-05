@@ -15,9 +15,9 @@ extern motor conveyor;
 extern motor leftLift;
 extern motor rightLift;
 
-extern pneumatics twoBarL;
-extern pneumatics twoBarR;
-extern pneumatics frontMogo;
+extern digital_out twoBarL;
+extern digital_out twoBarR;
+extern digital_out frontMogo;
 extern pneumatics latch;
 //extern digital_out backMogo;
 //extern digital_out liftAssistL;

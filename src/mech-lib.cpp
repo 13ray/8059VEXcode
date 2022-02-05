@@ -28,20 +28,20 @@ void liftRot(int rot){
 //two bar pistons: true = down
 void twoBar(bool s) {
   if(s){
-    twoBarL.close();
-    twoBarR.close();
+    twoBarL.set(f);
+    twoBarR.set(f);
   }else{
-    twoBarL.open();
-    twoBarR.open();    
+    twoBarL.set(t);
+    twoBarR.set(t);    
   }
 }
 
 //front mogo
 void frontMOG(bool s){
   if(s){
-    frontMogo.close();
+    frontMogo.set(f);
   }else{
-    frontMogo.open();
+    frontMogo.set(t);
   }
 }
 

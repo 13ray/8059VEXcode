@@ -20,9 +20,9 @@ motor leftLift = motor(PORT1, ratio36_1, f);
 motor rightLift = motor(PORT10,ratio36_1, t);
 
 
-pneumatics twoBarL = pneumatics(Brain.ThreeWirePort.A); 
-pneumatics twoBarR = pneumatics(Brain.ThreeWirePort.B); 
-pneumatics frontMogo = pneumatics(Brain.ThreeWirePort.H); 
+digital_out twoBarL = digital_out(Brain.ThreeWirePort.A); 
+digital_out twoBarR = digital_out(Brain.ThreeWirePort.B); 
+digital_out frontMogo = digital_out(Brain.ThreeWirePort.H); 
 pneumatics latch = pneumatics(Brain.ThreeWirePort.G); 
 
 rotation rot_lb = rotation(PORT5, true);
@@ -37,10 +37,8 @@ controller Controller1 = controller(primary);
 void vexcodeInit(){
   imu.calibrate();
   if(imu.isCalibrating()) {wait(20, msec);}
-  frontMOG(t);//up
-  twoBar(t);//up
-  Latch(f);//forward
   Controller1.Screen.clearScreen();
+  frontMOG(f);
 
   rot_lb.resetPosition();
   rot_rb.resetPosition();
