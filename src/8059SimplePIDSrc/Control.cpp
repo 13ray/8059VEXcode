@@ -12,7 +12,7 @@ double BMGFR_TURN_KP = 0.76, BMGFR_TURN_KD = 0; //back mogo and front right
 double BMGFL_TURN_KP = 0.84, BMGFL_TURN_KD = 0.7; //back mogo and front left
 double MGS_TURN_KP = 0.8, MGS_TURN_KD = 0.5; //all 3 mogos
 
-#define RAMPING_POW 1
+#define RAMPING_POW 1.2
 #define DISTANCE_LEEWAY 15
 #define BEARING_LEEWAY 1
 #define MAX_POW 100

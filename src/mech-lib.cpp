@@ -2,7 +2,7 @@
 
 //values or thresholds
 int liftPos = 0, prevliftPos = 0;
-int tarliftPos = 87, potRange = 1, potDiff = 0;
+int tarliftPos = 86, potRange = 1, potDiff = 0;
 bool lifting = f;
 
 bool f = false, t = true;
@@ -47,8 +47,9 @@ void frontMOG(bool s){
 
 //hanging process
 void hang(){
-  while(pot_liftValue > 117 || pot_liftValue < 115){
+  while(pot_liftValue > 115 || pot_liftValue < 113){
     if(liftPos == 2) liftPos = 3;
+    waitLift();
     latch.set(t);
     if(liftPos == 3) liftPos = 4;
   }
@@ -60,16 +61,17 @@ void waitLift(){
     wait(10, msec);
     if(!lifting) break;
   }
+  wait(20, msec);
 }
 
 int Lift() {         //move to specific position 
   while(t) {
     switch(liftPos) {
-      case 0: tarliftPos = 87; break; //139 lowest
+      case 0: tarliftPos = 86; break; //139 lowest
       case 1: tarliftPos = 128; break; //99 scoring
       case 2: tarliftPos = 160; break; //72 highest
       case 3: tarliftPos = 146; break; //80 before latch 
-      case 4: tarliftPos = 116; break; //111 hang
+      case 4: tarliftPos = 114; break; //111 hang
       case 5: tarliftPos = 100; break; //130 moving in auton
     }
 
@@ -78,7 +80,10 @@ int Lift() {         //move to specific position
     //pid for lift
     if(abs(potDiff) > potRange) {
       lifting = t;
-      if(abs(potDiff) < 10){
+      if(tarliftPos == 4){
+        lift(potDiff*-100);
+      }
+      else if(abs(potDiff) < 10){
         lift(potDiff*-5);
       }
       else{

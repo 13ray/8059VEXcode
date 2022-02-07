@@ -106,54 +106,75 @@ void usercontrol(void) {
 
       liftPos = 0;
       waitLift();
-      baseMove(14.7, FMG_KP-0.03, FMG_KD); //intake right neutral
-      waitBase(4000);
+      baseMove(14, FMG_KP-0.03, FMG_KD); //intake right neutral
+      waitBase(5000);
       resetRot();
 
       //clearing rings
       liftPos = 2;
-      baseMove(35,FMGS_KP, FMGS_KD);
-      waitBase(9000);
+      baseMove(33, FMGS_KP, FMGS_KD);
+      waitBase(7000);
       resetRot();
-      wait(500, msec);
 
-      baseTurn(12, FMGS_TURN_KP, FMGS_TURN_KD); //face rings
-      waitBase(3000);
+      baseTurn(11.5, FMGS_TURN_KP, FMGS_TURN_KD); //face rings
+      waitBase(3500);
 
-      baseMove(30, FMGS_KP, FMGS_KD); //clear rings
+      baseMove(27.5, FMGS_KP, FMGS_KD); //clear rings
       waitBase(4500);
-      wait(500, msec);
 
       //scoring neutral and red mogos
-      baseMove(-14.7, FMGS_KP, FMGS_KD);
+      baseMove(-13 , FMGS_KP, FMGS_KD);
       waitBase(7800);
 
-      baseTurn(286, FMGS_TURN_KP, FMGS_TURN_KD); //face platform
-      waitBase(4300);
+      baseTurn(290, FMGS_TURN_KP, FMGS_TURN_KD); //face platform
+      waitBase(5000);
 
-      baseMove(20.5, FMGS_KP-0.05, 0); //go into platform
+      baseMove(17.5, FMGS_KP-0.05, 0); //go into platform
       waitBase(3000);
       
       liftPos = 1;
       waitLift();
       frontMOG(t); //score
-      wait(200, msec);
+      wait(150, msec);
 
       //tall neutral
       liftPos = 2;
       waitLift();
+
+      baseTurn(290, FMG_TURN_KP, FMG_TURN_KD);
+      waitBase(1000);
       
-      timerBase(30, 30, 500); //align against platform
-      timerBase(19, 18, 250);
+      timerBase(18, 18, 750);//align against platform
       resetRot();
 
-      baseMove(-43.5, DEFAULT_KP-0.06, 0); //intake tall neutral
-      waitBase(20000);
+      baseMove(-30, DEFAULT_KP-0.02, 0); //intake tall neutral
+      waitBase(9000);
       liftPos = 0;
-      twoBar(t);
+      resetRot();
+      baseMove(-16, 0.12, 0);
+      waitBase(5000);
+
+      twoBar(t); //lift up mogo
       frontMOG(f);
       wait(100, msec);
 
+      //left neutral mogo
+      baseMove(-16, BMG_KP, BMG_KD);
+      waitBase(5000);
+
+      baseTurn(345, BMG_TURN_KP, BMG_TURN_KD); //face mogo
+      waitBase(10000);
+      resetRot();
+
+      baseMove(25, BMG_KP, BMG_KD); //intake mogo
+      waitBase(10000);
+      liftPos = 5;
+      resetRot();
+      waitLift();
+
+
+
+      
       //left neutral mogo
       baseTurn(8, BMG_TURN_KP, BMG_TURN_KD); //face mogo
       waitBase(6000);
@@ -174,6 +195,7 @@ void usercontrol(void) {
 
       baseTurn(20, BMGFR_TURN_KP, BMGFR_TURN_KD); //face mogo
       waitBase(5000);
+      
 
       auton = f;
     }
