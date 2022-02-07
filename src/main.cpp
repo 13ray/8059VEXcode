@@ -80,26 +80,27 @@ void usercontrol(void) {
   // User control code here, inside the loop
   while (t) {
     
-    /*if(Controller1.ButtonA.pressing()) auton = t;
+    if(Controller1.ButtonA.pressing()) auton = t;
     if(auton){
       // baseTurn(30,FMGS_TURN_KP,FMGS_TURN_KD);
-      
+      task controlTask(Control);
+      task odomTask(Odometry);
       resetCoords(0,0,0);
 
       //right red mogo
       baseMove(4, DEFAULT_KP, DEFAULT_KD); //intake right red
       waitBase(800);
 
-      baseMove(-11, DEFAULT_KP, DEFAULT_KD); //reverse
-      waitBase(800);
-
       task liftTask(Lift);
       liftPos = 5;
       waitLift();
 
+      baseMove(-14, DEFAULT_KP, DEFAULT_KD); //reverse
+      waitBase(800);
+
       //right neutral mogo
-      baseTurn(305.5, FMG_TURN_KP, FMG_TURN_KD); //face mogo
-      waitBase(3000);
+      baseTurn(309, FMG_TURN_KP, FMG_TURN_KD); //face mogo
+      waitBase(6000);
       
       baseMove(36, FMG_KP, FMG_KD); //go to mogo
       waitBase(8000);
@@ -110,92 +111,52 @@ void usercontrol(void) {
       waitBase(5000);
       resetRot();
 
-      //clearing rings
+      //scoring neutral and red mogos
       liftPos = 2;
-      baseMove(33, FMGS_KP, FMGS_KD);
-      waitBase(7000);
+      wait(500, msec);
+      baseMove(60, FMGS_KP, FMGS_KD); //33 original
+      waitBase(25000);
       resetRot();
 
-      baseTurn(11.5, FMGS_TURN_KP, FMGS_TURN_KD); //face rings
-      waitBase(3500);
-
-      baseMove(27.5, FMGS_KP, FMGS_KD); //clear rings
-      waitBase(4500);
-
-      //scoring neutral and red mogos
-      baseMove(-13 , FMGS_KP, FMGS_KD);
-      waitBase(7800);
-
-      baseTurn(290, FMGS_TURN_KP, FMGS_TURN_KD); //face platform
-      waitBase(5000);
-
-      baseMove(17.5, FMGS_KP-0.05, 0); //go into platform
-      waitBase(3000);
-      
       liftPos = 1;
       waitLift();
       frontMOG(t); //score
       wait(150, msec);
 
-      //tall neutral
-      liftPos = 2;
-      waitLift();
+      //tall neutral mogo
+      baseMove(-21, DEFAULT_KP, DEFAULT_KD); //move away from platform
+      waitBase(8000);
 
-      baseTurn(290, FMG_TURN_KP, FMG_TURN_KD);
-      waitBase(1000);
-      
-      timerBase(18, 18, 750);//align against platform
-      resetRot();
-
-      baseMove(-30, DEFAULT_KP-0.02, 0); //intake tall neutral
-      waitBase(9000);
       liftPos = 0;
-      resetRot();
-      baseMove(-16, 0.12, 0);
-      waitBase(5000);
-
-      twoBar(t); //lift up mogo
       frontMOG(f);
-      wait(100, msec);
-
-      //left neutral mogo
-      baseMove(-16, BMG_KP, BMG_KD);
+      baseTurn(245, 1, 0); //face mogo
       waitBase(5000);
 
-      baseTurn(345, BMG_TURN_KP, BMG_TURN_KD); //face mogo
+      baseMove(-23, DEFAULT_KP-0.06, DEFAULT_KD); //intake mogo
       waitBase(10000);
+      twoBar(t);
       resetRot();
-
-      baseMove(25, BMG_KP, BMG_KD); //intake mogo
-      waitBase(10000);
-      liftPos = 5;
-      resetRot();
-      waitLift();
-
-
-
-      
-      //left neutral mogo
-      baseTurn(8, BMG_TURN_KP, BMG_TURN_KD); //face mogo
-      waitBase(6000);
-
-      baseMove(21, BMG_KP, BMG_KD); //intake left neutral 
-      waitBase(10000);
-
-      wait(100, msec);
-      liftPos = 5;
-      waitLift();
 
       //left red mogo
-      baseTurn(105, BMGFR_TURN_KP, BMGFR_TURN_KD); //face platform
-      waitBase(5000);
+      baseMove(-47, BMG_KP, BMG_KD);
+      waitBase(15000);
+      resetRot();
+      wait(500, msec);
 
-      baseMove(30, BMG_KP, BMG_KD);
-      waitBase(10000);
-
-      baseTurn(20, BMGFR_TURN_KP, BMGFR_TURN_KD); //face mogo
+      baseTurn(16, BMG_TURN_KP, BMG_TURN_KD); //face mogo
       waitBase(5000);
+      resetRot();
+      wait(500, msec);
       
+      baseMove(18, BMG_KP-0.03, 0); //intake mogo
+      waitBase(5000);
+
+      //left neutral mogo
+      liftPos = 5;
+      waitLift();
+
+      baseTurn(280, BMGFR_TURN_KP, BMGFR_TURN_KD);
+      waitBase(5000);
 
       auton = f;
     }
@@ -211,8 +172,8 @@ void usercontrol(void) {
       twoBar(t);
       
       auton2 = f;
-    }*/
-
+    }
+    
     //drivemode
     if(Controller1.ButtonY.pressing()) driveMode += 1, Controller1.Screen.clearLine(3);
     if(driveMode%3 == 1) { //reverse arcade
@@ -242,7 +203,7 @@ void usercontrol(void) {
     else if(!Controller1.ButtonL1.pressing()) {
       L1Pressed = f;
     }
-    twoBar(twoBarTE); //actuate 2b*/
+    // twoBar(twoBarTE); //actuate 2b
 
     //frontMogo
     if(Controller1.ButtonL2.pressing() && !L2Pressed){
@@ -313,9 +274,9 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-  // task controlTask(Control);
+  task controlTask(Control);
   task sensorTask(Sensors);
-  // task odomTask(Odometry);
+  task odomTask(Odometry);
   // task debugTask(Debug);
   // task liftTask(Lift);
 
