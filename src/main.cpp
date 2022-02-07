@@ -79,12 +79,14 @@ void usercontrol(void) {
   
   // User control code here, inside the loop
   while (t) {
-    
+    /*
     if(Controller1.ButtonA.pressing()) auton = t;
     if(auton){
       // baseTurn(30,FMGS_TURN_KP,FMGS_TURN_KD);
       task controlTask(Control);
       task odomTask(Odometry);
+
+      while(imu.is)
       resetCoords(0,0,0);
 
       //right red mogo
@@ -160,7 +162,6 @@ void usercontrol(void) {
 
       auton = f;
     }
-    count += 1;
 
     if(Controller1.ButtonB.pressing()){
       auton2 = t;
@@ -172,7 +173,8 @@ void usercontrol(void) {
       twoBar(t);
       
       auton2 = f;
-    }
+    }*/
+    count += 1;
     
     //drivemode
     if(Controller1.ButtonY.pressing()) driveMode += 1, Controller1.Screen.clearLine(3);
@@ -200,10 +202,9 @@ void usercontrol(void) {
       L1Pressed = t;
       twoBarTE = !twoBarTE; //switch 2b state
     }
-    else if(!Controller1.ButtonL1.pressing()) {
-      L1Pressed = f;
-    }
-    // twoBar(twoBarTE); //actuate 2b
+    else if(!Controller1.ButtonL1.pressing()) L1Pressed = f;
+
+    twoBar(twoBarTE); //actuate 2b
 
     //frontMogo
     if(Controller1.ButtonL2.pressing() && !L2Pressed){
@@ -213,9 +214,8 @@ void usercontrol(void) {
       }
       frontMOG(t); //open
     }
-    else{
-      L2Pressed = f;
-    }
+    else if(!Controller1.ButtonL2.pressing()) L2Pressed = f;
+
     if((count-pcount) == 6 && pcount != 0) frontMOG(f); //close after controller loop runs 6 times
 
     //Latch
@@ -237,9 +237,8 @@ void usercontrol(void) {
         Controller1.rumble("-");
       }
     }
-    else{
-      R1Pressed = f;
-    }
+    else if(!Controller1.ButtonR1.pressing()) R1Pressed = f;
+
     if(Controller1.ButtonR2.pressing() && !R2Pressed){ //move down
       R2Pressed = t;
       Controller1.Screen.clearLine(2);
@@ -253,19 +252,12 @@ void usercontrol(void) {
         Controller1.rumble("-");
       }
     } 
-    else{
-      R2Pressed = f;
-    }
+    else if(!Controller1.ButtonR2.pressing()) R2Pressed = f;
 
     if(liftStart == 1){
       task liftTask(Lift);
     }
-
-    Controller1.Screen.setCursor(1,1);
-    Controller1.Screen.print("Two Bar = %d", twoBarL.value());
-    Controller1.Screen.setCursor(2, 1);
-    Controller1.Screen.print("Lift Pos = %d, %d", liftPos, imu.isCalibrating());
-    Controller1.Screen.setCursor(3, 1);
+    
     Controller1.Screen.print(drivePrint.c_str());
   }
 }
@@ -274,9 +266,9 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
-  task controlTask(Control);
+  // task controlTask(Control);
   task sensorTask(Sensors);
-  task odomTask(Odometry);
+  // task odomTask(Odometry);
   // task debugTask(Debug);
   // task liftTask(Lift);
 

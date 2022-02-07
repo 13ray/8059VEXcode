@@ -35,10 +35,16 @@ controller Controller1 = controller(primary);
 
 //initialise
 void vexcodeInit(){
+  Controller1.Screen.setCursor(3, 1);
   imu.calibrate();
-  if(imu.isCalibrating()) {wait(20, msec);}
-  Controller1.Screen.clearScreen();
-  frontMOG(f);
+  while(true) {
+    if(imu.isCalibrating()) {
+      Controller1.Screen.print("IMU Calibrating");
+      wait(50, msec);
+    }
+    else break;
+  }
+  Controller1.Screen.clearLine(3);
 
   rot_lb.resetPosition();
   rot_rb.resetPosition();
