@@ -3,6 +3,7 @@
 #include "mech-lib.h"
 #include "robot-config.h"
 
+void skills();
 void test();
 
 #endif

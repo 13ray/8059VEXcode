@@ -82,9 +82,6 @@ void waitBase(double cutoff){
     while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
   }
   printf("time taken, %.f \n\n", start);
-  targBearing = bearing;
-  targEncdL = rot_lbValue;
-  targEncdR = rot_rbValue;
 }
 
 int Control(){
@@ -124,7 +121,7 @@ int Control(){
       }
 
       double deltaPowerL = targPowerL - powerL;
-      powerL += abscap(deltaPowerL, RAMPING_POW);
+      powerL += abscap(deltaPowerL, RAMPING_POW-0.2);
       double deltaPowerR = targPowerR - powerR;
       powerR += abscap(deltaPowerR, RAMPING_POW);
 
@@ -133,7 +130,7 @@ int Control(){
     }
     leftBase.spin(fwd, powerL, pct);
     rightBase.spin(fwd, powerR, pct);
-    wait(5, msec);
+    wait(3, msec);
   }
   return 0;
 }

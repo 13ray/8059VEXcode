@@ -72,126 +72,46 @@ void usercontrol(void) {
   auton = f;
   bool auton2 = f;
   int driveMode = 1, count = 0, pcount = 0;
-  std::string drivePrint = "";
   int LBSpeed = 0, RBSpeed = 0;
   int liftStart = 0;
-  bool L1Pressed = f, R1Pressed = f, R2Pressed = f, L2Pressed = f, UPPressed = f, twoBarTE = f;
+  bool L1Pressed = f, R1Pressed = f, R2Pressed = f, L2Pressed = f, UPPressed = f, YPressed = f;
+  bool twoBarState = f;
   
   // User control code here, inside the loop
   while (t) {
-    /*
+    //auton 1
     if(Controller1.ButtonA.pressing()) auton = t;
     if(auton){
-      // baseTurn(30,FMGS_TURN_KP,FMGS_TURN_KD);
-      task controlTask(Control);
-      task odomTask(Odometry);
-
-      while(imu.is)
-      resetCoords(0,0,0);
-
-      //right red mogo
-      baseMove(4, DEFAULT_KP, DEFAULT_KD); //intake right red
-      waitBase(800);
-
-      task liftTask(Lift);
-      liftPos = 5;
-      waitLift();
-
-      baseMove(-14, DEFAULT_KP, DEFAULT_KD); //reverse
-      waitBase(800);
-
-      //right neutral mogo
-      baseTurn(309, FMG_TURN_KP, FMG_TURN_KD); //face mogo
-      waitBase(6000);
-      
-      baseMove(36, FMG_KP, FMG_KD); //go to mogo
-      waitBase(8000);
-
-      liftPos = 0;
-      waitLift();
-      baseMove(14, FMG_KP-0.03, FMG_KD); //intake right neutral
-      waitBase(5000);
-      resetRot();
-
-      //scoring neutral and red mogos
-      liftPos = 2;
-      wait(500, msec);
-      baseMove(60, FMGS_KP, FMGS_KD); //33 original
-      waitBase(25000);
-      resetRot();
-
-      liftPos = 1;
-      waitLift();
-      frontMOG(t); //score
-      wait(150, msec);
-
-      //tall neutral mogo
-      baseMove(-21, DEFAULT_KP, DEFAULT_KD); //move away from platform
-      waitBase(8000);
-
-      liftPos = 0;
-      frontMOG(f);
-      baseTurn(245, 1, 0); //face mogo
-      waitBase(5000);
-
-      baseMove(-23, DEFAULT_KP-0.06, DEFAULT_KD); //intake mogo
-      waitBase(10000);
-      twoBar(t);
-      resetRot();
-
-      //left red mogo
-      baseMove(-47, BMG_KP, BMG_KD);
-      waitBase(15000);
-      resetRot();
-      wait(500, msec);
-
-      baseTurn(16, BMG_TURN_KP, BMG_TURN_KD); //face mogo
-      waitBase(5000);
-      resetRot();
-      wait(500, msec);
-      
-      baseMove(18, BMG_KP-0.03, 0); //intake mogo
-      waitBase(5000);
-
-      //left neutral mogo
-      liftPos = 5;
-      waitLift();
-
-      baseTurn(280, BMGFR_TURN_KP, BMGFR_TURN_KD);
-      waitBase(5000);
-
+      skills();
       auton = f;
     }
 
-    if(Controller1.ButtonB.pressing()){
-      auton2 = t;
-
-    }
+    //auton 2
+    if(Controller1.ButtonB.pressing()) auton2 = t;
     if(auton2){
-      twoBar(f);
-      wait(200, msec);
-      twoBar(t);
-      
+      test();
       auton2 = f;
-    }*/
+    }
     count += 1;
     
     //drivemode
-    if(Controller1.ButtonY.pressing()) driveMode += 1, Controller1.Screen.clearLine(3);
+    if(Controller1.ButtonY.pressing() && !YPressed){
+      YPressed = t;
+      driveMode += 1;
+    }
+    else if(!Controller1.ButtonY.pressing()) YPressed = f;
+
     if(driveMode%3 == 1) { //reverse arcade
       LBSpeed = Controller1.Axis2.position() + Controller1.Axis4.position();
       RBSpeed = Controller1.Axis2.position() - Controller1.Axis4.position();
-      drivePrint = "R Arcade";
     }
     else if(driveMode%3 == 2) { //normal arcade
       LBSpeed = Controller1.Axis3.position() + Controller1.Axis1.position();
       RBSpeed = Controller1.Axis3.position() - Controller1.Axis1.position(); 
-      drivePrint = "Arcade";
     }
     else { //tank
       LBSpeed = Controller1.Axis3.position();
       RBSpeed = Controller1.Axis2.position();
-      drivePrint = "Tank";
     }
 
     leftBase.spin(fwd, LBSpeed, pct);
@@ -200,11 +120,11 @@ void usercontrol(void) {
     //2 bar
     if(Controller1.ButtonL1.pressing() && !L1Pressed){
       L1Pressed = t;
-      twoBarTE = !twoBarTE; //switch 2b state
+      twoBarState = !twoBarState; //switch 2b state
     }
     else if(!Controller1.ButtonL1.pressing()) L1Pressed = f;
 
-    twoBar(twoBarTE); //actuate 2b
+    twoBar(twoBarState); //actuate 2b
 
     //frontMogo
     if(Controller1.ButtonL2.pressing() && !L2Pressed){
@@ -216,7 +136,7 @@ void usercontrol(void) {
     }
     else if(!Controller1.ButtonL2.pressing()) L2Pressed = f;
 
-    if((count-pcount) == 6 && pcount != 0) frontMOG(f); //close after controller loop runs 6 times
+    if((count-pcount) == 8 && pcount != 0) frontMOG(f); //close after controller loop runs 8 times
 
     //Latch
     if(Controller1.ButtonUp.pressing() && !UPPressed){
@@ -244,7 +164,7 @@ void usercontrol(void) {
       Controller1.Screen.clearLine(2);
       if(liftPos > 0){
         liftPos -= 1;
-        if(liftPos == 0){ //close front mogo when 
+        if(liftPos == 0){ //close front mogo
           frontMOG(f);
         }
       }
@@ -257,8 +177,7 @@ void usercontrol(void) {
     if(liftStart == 1){
       task liftTask(Lift);
     }
-    
-    Controller1.Screen.print(drivePrint.c_str());
+    wait(10, msec);
   }
 }
 

@@ -47,7 +47,7 @@ void frontMOG(bool s){
 
 //hanging process
 void hang(){
-  while(pot_liftValue > 115 || pot_liftValue < 113){
+  while(pot_liftValue > 111 || pot_liftValue < 119){
     if(liftPos == 2) liftPos = 3;
     waitLift();
     latch.set(t);
@@ -71,7 +71,7 @@ int Lift() {         //move to specific position
       case 1: tarliftPos = 128; break; //99 scoring
       case 2: tarliftPos = 160; break; //72 highest
       case 3: tarliftPos = 146; break; //80 before latch 
-      case 4: tarliftPos = 114; break; //111 hang
+      case 4: tarliftPos = 110; break; //111 hang
       case 5: tarliftPos = 100; break; //130 moving in auton
     }
 

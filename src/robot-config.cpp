@@ -35,11 +35,12 @@ controller Controller1 = controller(primary);
 
 //initialise
 void vexcodeInit(){
-  Controller1.Screen.setCursor(3, 1);
+  frontMOG(f);
   imu.calibrate();
   while(true) {
     if(imu.isCalibrating()) {
-      Controller1.Screen.print("IMU Calibrating");
+      Controller1.Screen.setCursor(3, 1);
+      Controller1.Screen.print("IMU");
       wait(50, msec);
     }
     else break;
