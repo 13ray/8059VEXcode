@@ -34,9 +34,15 @@ void printAllTerminal() {
 }
 int Debug(){
   while(t){
-    printf("x: %.2f y: %.2f bearing: %.2f\n", X, Y, bearing);
-    printf("errorEncdL: %.2f errorEncdR: %.2f\n", errorEncdL, errorEncdR);
-    printf("powerL: %.2f powerR: %.2f\n", powerL, powerR);
+    // printf("x: %.2f y: %.2f bearing: %.2f\n", X, Y, bearing);
+    // printf("errorEncdL: %.2f errorEncdR: %.2f\n", errorEncdL, errorEncdR);
+    // printf("powerL: %.2f powerR: %.2f\n", powerL, powerR);
+    Controller1.Screen.setCursor(1,1);
+    Controller1.Screen.print("x: %.2f y: %.2f b: %.2f\n", X, Y, bearing);
+    Controller1.Screen.setCursor(2,1);
+    Controller1.Screen.print("eL: %.2f eR: %.2f\n", errorEncdL, errorEncdR);
+    Controller1.Screen.setCursor(3,1);
+    Controller1.Screen.print("pL: %.2f pR: %.2f\n", powerL, powerR);
     wait(100, msec);
   }
   return 0;

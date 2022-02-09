@@ -82,15 +82,23 @@ void usercontrol(void) {
     //auton 1
     if(Controller1.ButtonA.pressing()) auton = t;
     if(auton){
+      task controlTask(Control);
+      task odomTask(Odometry);
+      resetCoords(0, 0, 0);
       skills();
       auton = f;
+      controlTask.stop();
     }
 
     //auton 2
     if(Controller1.ButtonB.pressing()) auton2 = t;
     if(auton2){
+      task controlTask(Control);
+      task odomTask(Odometry);
+      resetCoords(0, 0, 0);
       test();
       auton2 = f;
+      controlTask.stop();
     }
     count += 1;
     
@@ -136,7 +144,7 @@ void usercontrol(void) {
     }
     else if(!Controller1.ButtonL2.pressing()) L2Pressed = f;
 
-    if((count-pcount) == 8 && pcount != 0) frontMOG(f); //close after controller loop runs 8 times
+    if((count-pcount) == 10 && pcount != 0) frontMOG(f); //close after controller loop runs 10 times
 
     //Latch
     if(Controller1.ButtonUp.pressing() && !UPPressed){
@@ -188,7 +196,7 @@ int main() {
   // task controlTask(Control);
   task sensorTask(Sensors);
   // task odomTask(Odometry);
-  // task debugTask(Debug);
+  task debugTask(Debug);
   // task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.

@@ -45,7 +45,7 @@ void vexcodeInit(){
     }
     else break;
   }
-  Controller1.Screen.clearLine(3);
+  Controller1.Screen.clearScreen();
 
   rot_lb.resetPosition();
   rot_rb.resetPosition();
