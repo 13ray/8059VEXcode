@@ -5,9 +5,9 @@ double FMG_KP = 0.14, FMG_KD = 1.5; //1 mogo in front
 double FMGS_KP = 0.13, FMGS_KD = 3; //2 mogos in front
 double BMG_KP = 0.14, BMG_KD = 0.5; //back mogo only / back mogo and 1 front
 double MGS_KP = 0.13, MGS_KD = 0.3;//all 3 mogos
-double FMG_TURN_KP = 1.1, FMG_TURN_KD = 0.2; //1 mogo front right 
+double FMG_TURN_KP = 1.1, FMG_TURN_KD = 0.5; //1 mogo front right 
 double FMGS_TURN_KP = 1.12, FMGS_TURN_KD = 1.2; //2 mogos in front
-double BMG_TURN_KP = 0.8, BMG_TURN_KD = 0; //back mogo only 
+double BMG_TURN_KP = 0.79, BMG_TURN_KD = 0; //back mogo only 
 double BMGFR_TURN_KP = 0.76, BMGFR_TURN_KD = 0; //back mogo and front right
 double BMGFL_TURN_KP = 0.84, BMGFL_TURN_KD = 0.7; //back mogo and front left
 double MGS_TURN_KP = 0.8, MGS_TURN_KD = 0.5; //all 3 mogos
@@ -16,6 +16,8 @@ double MGS_TURN_KP = 0.8, MGS_TURN_KD = 0.5; //all 3 mogos
 #define DISTANCE_LEEWAY 15
 #define BEARING_LEEWAY 1
 #define MAX_POW 100
+
+double baseCorrection = 0;
 
 double targEncdL = 0, targEncdR = 0, targBearing = 0;
 double errorEncdL = 0, errorEncdR = 0, errorBearing = 0;
@@ -77,7 +79,7 @@ void unPauseBase() {
 void waitBase(double cutoff){
 	double start = Timer.time();
   if(turnMode) {
-    while(fabs(targBearing - bearing) > BEARING_LEEWAY && (Timer.time()-start) < cutoff && (powerL + powerR)/2 < 10) wait(20, msec);
+    while(fabs(targBearing - bearing) > BEARING_LEEWAY && (Timer.time()-start) < cutoff && (powerL + powerR)/2 < 0.5) wait(20, msec);
   }else{
     while((fabs(targEncdL - rot_lbValue) > DISTANCE_LEEWAY || fabs(targEncdR - rot_rbValue) > DISTANCE_LEEWAY) && (Timer.time()-start) < cutoff) wait(20, msec);
   }
@@ -94,10 +96,10 @@ int Control(){
           if(targBearing < bearing) errorBearing = 360 - targBearing + bearing;
           else errorBearing = -(360-targBearing + bearing);
         }
-        else if(errorBearing < -180){
+        else if(errorBearing < -180) {
           if(targBearing < bearing) errorBearing = 360 - bearing + targBearing;
           else errorBearing = -(360 - bearing + targBearing);
-          }
+        }
           
         double deltaErrorBearing = errorBearing - prevErrorBearing;
 
@@ -105,6 +107,11 @@ int Control(){
         targPowerR = -targPowerL;
 
         prevErrorBearing = errorBearing;
+
+        double deltaPowerL = targPowerL - powerL;
+        powerL += abscap(deltaPowerL, RAMPING_POW);
+        double deltaPowerR = targPowerR - powerR;
+        powerR += abscap(deltaPowerR, RAMPING_POW);
       }
       else {
         errorEncdL = targEncdL - rot_lbValue;
@@ -118,19 +125,20 @@ int Control(){
 
         prevErrorEncdL = errorEncdL;
         prevErrorEncdR = errorEncdR;
-      }
 
-      double deltaPowerL = targPowerL - powerL;
-      powerL += abscap(deltaPowerL, RAMPING_POW-0.1);
-      double deltaPowerR = targPowerR - powerR;
-      powerR += abscap(deltaPowerR, RAMPING_POW);
+        double deltaPowerL = targPowerL - powerL;
+        powerL += abscap(deltaPowerL, RAMPING_POW-baseCorrection);
+        double deltaPowerR = targPowerR - powerR;
+        powerR += abscap(deltaPowerR, RAMPING_POW);
+      }
 
       powerL = abscap(powerL, MAX_POW);
       powerR = abscap(powerR, MAX_POW);
-    }
+
     leftBase.spin(fwd, powerL, pct);
     rightBase.spin(fwd, powerR, pct);
-    wait(3, msec);
+    }
+    wait(1, msec);
   }
   return 0;
 }

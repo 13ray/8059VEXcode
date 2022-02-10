@@ -40,12 +40,12 @@ void vexcodeInit(){
   while(true) {
     if(imu.isCalibrating()) {
       Controller1.Screen.setCursor(3, 1);
-      Controller1.Screen.print("IMU");
+      Controller1.Screen.print("IMU Calibrating");
       wait(50, msec);
     }
     else break;
   }
-  Controller1.Screen.clearScreen();
+  Controller1.Screen.clearLine(3);
 
   rot_lb.resetPosition();
   rot_rb.resetPosition();

@@ -84,10 +84,10 @@ void usercontrol(void) {
     if(auton){
       task controlTask(Control);
       task odomTask(Odometry);
+      task debugTask(Debug);
       resetCoords(0, 0, 0);
       skills();
       auton = f;
-      controlTask.stop();
     }
 
     //auton 2
@@ -98,7 +98,6 @@ void usercontrol(void) {
       resetCoords(0, 0, 0);
       test();
       auton2 = f;
-      controlTask.stop();
     }
     count += 1;
     
@@ -196,7 +195,7 @@ int main() {
   // task controlTask(Control);
   task sensorTask(Sensors);
   // task odomTask(Odometry);
-  task debugTask(Debug);
+  // task debugTask(Debug);
   // task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.
