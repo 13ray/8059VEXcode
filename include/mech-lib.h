@@ -4,8 +4,7 @@
 extern int liftPos, tarliftPos, potDiff;
 extern bool f, t, lifting;
 
-void lift(int s);
-void lift(int s, int t);
+void liftTime(int s, int t);
 void liftRot(int rot);
 void twoBar(bool s);
 void frontMOG(bool s);

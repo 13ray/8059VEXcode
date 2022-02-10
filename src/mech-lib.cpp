@@ -8,16 +8,10 @@ bool lifting = f;
 bool f = false, t = true;
 
 //lift
-void lift(int s) {
-  leftLift.spin(fwd, s, pct);
-  rightLift.spin(fwd, s, pct);
-}
-
-void lift(int s, int t) {
-  lift(s);
+void liftTime(int s, int t) {
+  lift.spin(fwd, s, pct);
   wait(t, msec);
-  leftLift.stop(hold);
-  rightLift.stop(hold);
+  lift.stop(hold);
 }
 
 void liftRot(int rot){
@@ -47,7 +41,7 @@ void frontMOG(bool s){
 
 //hanging process
 void hang(){
-  while(pot_liftValue > 109 || pot_liftValue < 107){
+  while(pot_liftValue > 104 || pot_liftValue < 102){
     if(liftPos == 2) liftPos = 3;
     waitLift();
     latch.set(t);
@@ -71,7 +65,7 @@ int Lift() {         //move to specific position
       case 1: tarliftPos = 128; break; //99 scoring
       case 2: tarliftPos = 160; break; //72 highest
       case 3: tarliftPos = 146; break; //80 before latch 
-      case 4: tarliftPos = 108; break; //111 hang
+      case 4: tarliftPos = 103; break; //111 hang
       case 5: tarliftPos = 100; break; //130 moving in auton
     }
 
@@ -81,13 +75,13 @@ int Lift() {         //move to specific position
     if(abs(potDiff) > potRange) {
       lifting = t;
       if(tarliftPos == 4){
-        lift(potDiff*-100);
+        lift.spin(fwd, potDiff*-100, pct);
       }
       else if(abs(potDiff) < 10){
-        lift(potDiff*-5);
+        lift.spin(fwd, potDiff*-5, pct);
       }
       else{
-        lift(potDiff*-15);
+        lift.spin(fwd, potDiff*-15, pct);
       }
     }
     else {

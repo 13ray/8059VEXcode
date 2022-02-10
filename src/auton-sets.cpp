@@ -13,7 +13,7 @@ void skills() {
   waitLift();
 
   baseMove(-14, FMG_KP, FMG_KD); // reverse
-  waitBase(2000);
+  waitBase(1500);
 
   // right neutral mogo
   baseTurn(306.5, FMG_TURN_KP, FMG_TURN_KD); // face mogo
@@ -30,13 +30,15 @@ void skills() {
   // scoring neutral and red mogos
   liftPos = 2;
   waitLift();
-  baseTurn(311.8, FMGS_TURN_KP+0.02, 0); //face platform
+  baseTurn(312.5, FMGS_TURN_KP+0.02, 0); //face platform
   waitBase(8000);
   wait(500, msec);
 
-  baseMove(57, FMGS_KP, FMGS_KD); //go to platform
-  waitBase(11000);
+  baseCorrection = 0;
+  baseMove(56.5, FMGS_KP, FMGS_KD); //go to platform
+  waitBase(8500);
   resetRot();
+  baseCorrection = 0.1;
 
   liftPos = 1;
   waitLift();
@@ -44,8 +46,10 @@ void skills() {
   wait(150, msec);
 
   // tall neutral mogo
-  baseMove(-24.5, DEFAULT_KP, DEFAULT_KD); // move away from platform
-  waitBase(8000);
+  baseTurn(312, 1, 0);
+  waitBase(3000);
+  baseMove(-25, DEFAULT_KP, DEFAULT_KD); // move away from platform
+  waitBase(6000);
 
   liftPos = 0;
   frontMOG(f);
@@ -54,14 +58,14 @@ void skills() {
   waitBase(8000);
 
   baseCorrection = 0;
-  baseMove(-24, DEFAULT_KP - 0.075, DEFAULT_KD); // intake mogo
+  baseMove(-25, DEFAULT_KP - 0.08, DEFAULT_KD); // intake mogo
   waitBase(10000);
   twoBar(t);
   resetRot();
   baseCorrection = 0.1;
 
   // left red mogo
-  baseMove(-49, BMG_KP, BMG_KD);
+  baseMove(-48, BMG_KP, BMG_KD);
   waitBase(9000);
   resetRot();
 
@@ -85,7 +89,7 @@ void skills() {
 
   liftPos = 0;
   waitLift();
-  baseMove(16, FMG_KP - 0.03, FMG_KD); // intake left neutral
+  baseMove(20, FMG_KP - 0.03, FMG_KD); // intake left neutral
   waitBase(5000);
 
   // liftPos = 5;

@@ -21,9 +21,9 @@ double absD(double q){
   else return 0;
 }
 
-double min(double a, double b) {
-  if(a>b) return b;
-  else return a;
+double max(double a, double b) {
+  if(a>b) return a;
+  else return b;
 }
 
 int sign(double x){

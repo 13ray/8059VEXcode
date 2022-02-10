@@ -50,12 +50,7 @@ void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
-  auton = t;
-  resetCoords(0,0,0);
-
-
-  // baseMove(24);
-  // waitBase(2000);
+  skills();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -76,16 +71,17 @@ void usercontrol(void) {
   int liftStart = 0;
   bool L1Pressed = f, R1Pressed = f, R2Pressed = f, L2Pressed = f, UPPressed = f, YPressed = f;
   bool twoBarState = f;
-  
   // User control code here, inside the loop
   while (t) {
     //auton 1
     if(Controller1.ButtonA.pressing()) auton = t;
     if(auton){
+      pauseBase = f;
       task controlTask(Control);
       task odomTask(Odometry);
       task debugTask(Debug);
       resetCoords(0, 0, 0);
+      wait(200, msec);
       skills();
       auton = f;
     }
@@ -93,8 +89,7 @@ void usercontrol(void) {
     //auton 2
     if(Controller1.ButtonB.pressing()) auton2 = t;
     if(auton2){
-      task controlTask(Control);
-      task odomTask(Odometry);
+      pauseBase = f;
       resetCoords(0, 0, 0);
       test();
       auton2 = f;
@@ -193,9 +188,9 @@ void usercontrol(void) {
 //
 int main() {
   // task controlTask(Control);
-  task sensorTask(Sensors);
   // task odomTask(Odometry);
-  // task debugTask(Debug);
+  task sensorTask(Sensors);
+  task debugTask(Debug);
   // task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.

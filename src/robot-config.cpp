@@ -9,15 +9,16 @@ brain  Brain;
 
 // VEXcode device constructors
 motor leftFront = motor(PORT11, ratio18_1, f);
-motor leftMid = motor(PORT3, ratio18_1, t);
-motor leftBack = motor(PORT4, ratio18_1, f);
+motor leftMid = motor(PORT2, ratio18_1, t);
+motor leftBack = motor(PORT3, ratio18_1, f);
 motor rightFront = motor(PORT20, ratio18_1, t);
-motor rightMid = motor(PORT8, ratio18_1, f);
-motor rightBack = motor(PORT6, ratio18_1, t);
+motor rightMid = motor(PORT9, ratio18_1, f);
+motor rightBack = motor(PORT8, ratio18_1, t);
 motor_group leftBase = motor_group(leftFront, leftMid, leftBack);
 motor_group rightBase = motor_group(rightFront, rightMid, rightBack);
 motor leftLift = motor(PORT1, ratio36_1, f);
 motor rightLift = motor(PORT10,ratio36_1, t);
+motor_group lift = motor_group(leftLift, rightLift);
 
 
 digital_out twoBarL = digital_out(Brain.ThreeWirePort.A); 
