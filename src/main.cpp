@@ -50,6 +50,7 @@ void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
+  // test();
   skills();
 }
 
@@ -83,7 +84,6 @@ void usercontrol(void) {
       resetCoords(0, 0, 0);
       wait(200, msec);
       skills();
-      auton = f;
     }
 
     //auton 2
@@ -190,7 +190,7 @@ int main() {
   // task controlTask(Control);
   // task odomTask(Odometry);
   task sensorTask(Sensors);
-  task debugTask(Debug);
+  // task debugTask(Debug);
   // task liftTask(Lift);
 
   // Set up callbacks for autonomous and driver control periods.

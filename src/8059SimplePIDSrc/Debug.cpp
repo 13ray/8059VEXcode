@@ -34,23 +34,20 @@ void printAllTerminal() {
 }
 int Debug(){
   while(t){
-    // printf("bearing: %.2f\n", bearing);
-    // printf("errorBearing: %.2f targBearing: %.2f\n", errorBearing, targBearing);
-    // printf("targPowerL: %.2f, targPowerR: %.2f\n", targPowerL, targPowerR);
-    // printf("powerL: %.2f powerR: %.2f\n\n", powerL, powerR);
-    printf("liftPos: %d\n", pot_liftValue);
-    printf("tarliftpos: %d\n", tarliftPos);
-    printf("lift value: %d\n", pot_liftValue);
+    printf("bearing: %.2f\n", bearing);
+    printf("errorBearing: %.2f targBearing: %.2f\n", errorBearing, targBearing);
+    printf("encdL: %.2f encdR: %.2f\n", rot_lbValue, rot_rbValue);
+    printf("targPowerL: %.2f, targPowerR: %.2f\n", targPowerL, targPowerR);
+    printf("powerL: %.2f powerR: %.2f\n\n", powerL, powerR);
     // printf("direction: %.d, %.d\n", leftLift.direction(), rightLift.direction());
-    // printf("efficiency: %.2f, %.2f\n", leftLift.efficiency(), rightLift.efficiency());
     // printf("velocity: %.2f, %.2f\n", leftLift.velocity(pct), rightLift.velocity(pct));
     // printf("torque: %.2f, %.2f\n", leftLift.torque(), rightLift.torque());
     // printf("voltage: %.2f, %.2f\n", leftLift.voltage(), rightLift.voltage());
     // printf("current: %.2f, %.2f\n", leftLift.current(), rightLift.current());
-    // printf("power: %.2f, %.2f\n", leftLift.power(), rightLift.power());
+    // printf("power: %.2f, %.2f\n\n", leftLift.power(), rightLift.power());
+    // printf("liftpos: %d\n", pot_liftValue);
     
-    
-    wait(50, msec);
+    wait(20, msec);
   }
   return 0;
 }

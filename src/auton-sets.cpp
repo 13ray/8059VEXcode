@@ -16,7 +16,7 @@ void skills() {
   waitBase(1500);
 
   // right neutral mogo
-  baseTurn(306.5, FMG_TURN_KP, FMG_TURN_KD); // face mogo
+  baseTurn(306, FMG_TURN_KP, FMG_TURN_KD); // face mogo
   waitBase(8000);
 
   baseMove(36, FMG_KP, FMG_KD); // go to mogo
@@ -26,6 +26,7 @@ void skills() {
   waitLift();
   baseMove(14, FMG_KP-0.03, FMG_KD); // intake right neutral
   waitBase(5000);
+  wait(200, msec);
 
   // scoring neutral and red mogos
   liftPos = 2;
@@ -55,14 +56,16 @@ void skills() {
   frontMOG(f);
 
   baseTurn(241, 1, 0); // face mogo
-  waitBase(8000);
+  waitBase(5000);
 
   baseCorrection = 0;
-  baseMove(-25, DEFAULT_KP - 0.08, DEFAULT_KD); // intake mogo
-  waitBase(10000);
+  baseMove(-24.5, DEFAULT_KP - 0.075, DEFAULT_KD); // intake mogo
+  waitBase(8000);
   twoBar(t);
   resetRot();
   baseCorrection = 0.1;
+  baseTurn(241, 1, 0);
+  waitBase(5000);
 
   // left red mogo
   baseMove(-48, BMG_KP, BMG_KD);
@@ -70,12 +73,12 @@ void skills() {
   resetRot();
 
   printf("face mogo\n\n\n");
-  baseTurn(35, BMG_TURN_KP, BMG_TURN_KD); // face mogo
+  baseTurn(32, BMG_TURN_KP, BMG_TURN_KD); // face mogo
   waitBase(5000);
   resetRot();
 
   printf("intake mogo]n\n\n");
-  baseMove(9, BMG_KP, 0); // intake mogo
+  baseMove(10, BMG_KP, 0); // intake mogo
   waitBase(3500);
 
   //left neutral mogo
@@ -89,26 +92,28 @@ void skills() {
 
   liftPos = 0;
   waitLift();
-  baseMove(20, FMG_KP - 0.03, FMG_KD); // intake left neutral
+  baseMove(25, FMG_KP - 0.03, FMG_KD); // intake left neutral
   waitBase(5000);
 
-  // liftPos = 5;
-  // wait(500, msec);
-  // baseTurn(230, BMGFR_TURN_KP, BMGFR_TURN_KD);
-  // waitBase(5000);
+  liftPos = 5;
+  waitLift();
+
+  baseTurn(280, MGS_TURN_KP, MGS_TURN_KD);
+  waitBase(5000);
+  baseMove(35, MGS_KP, MGS_KD);
+  waitBase(10000);
 
 }
 
 void test() {
-  task liftTask(Lift);
-  liftPos = 5;
-  waitLift();
 
   resetCoords(0, 0, 0);
   // baseMove(24, DEFAULT_KP, DEFAULT_KD);
   // waitBase(5000);
 
-  baseTurn(90, FMG_TURN_KP, FMG_TURN_KD);
-  waitBase(10000);
-  wait(5000, msec);
+  task liftTask(Lift);
+  liftPos = 1;
+  waitLift();
+  baseMove(10, DEFAULT_KP, DEFAULT_KD);
+  waitBase(5000);                                                                                                                                                                                                                                                                                                                                                               
 }
